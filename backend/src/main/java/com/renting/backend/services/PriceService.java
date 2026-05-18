@@ -1,7 +1,7 @@
 package com.renting.backend.services;
 
-import com.renting.backend.dtos.PriceCalculationRequest;
-import com.renting.backend.dtos.PriceCalculationResponse;
+import com.renting.backend.dtos.request.PriceCalculationRequest;
+import com.renting.backend.dtos.response.PriceCalculationResponse;
 import com.renting.backend.entities.Extra;
 import com.renting.backend.entities.ExtraType;
 import com.renting.backend.entities.Vehicle;

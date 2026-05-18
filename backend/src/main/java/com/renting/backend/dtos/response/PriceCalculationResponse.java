@@ -1,4 +1,4 @@
-package com.renting.backend.dtos;
+package com.renting.backend.dtos.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
