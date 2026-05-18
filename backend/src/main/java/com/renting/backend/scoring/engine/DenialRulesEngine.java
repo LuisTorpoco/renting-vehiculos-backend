@@ -1,4 +1,4 @@
-package com.renting.backend.controllers.scoring.engine;
+package com.renting.backend.scoring.engine;
 
 public class DenialRulesEngine {
 }

@@ -1,4 +1,4 @@
 package com.renting.backend.entities;
 
-public class RequestDetailVehicle {
+public class RequestDetail {
 }

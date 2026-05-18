@@ -1,4 +1,4 @@
-package com.renting.backend.controllers.scoring.context;
+package com.renting.backend.scoring.context;
 
 public class ScoringContext {
 }

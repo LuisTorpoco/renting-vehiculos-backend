@@ -1,4 +1,6 @@
 package com.renting.backend.entities;
 
-public class Client {
+public class Customer
+{
+    
 }

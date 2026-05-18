@@ -1,4 +1,4 @@
-package com.renting.backend.controllers.scoring.rules;
+package com.renting.backend.scoring.rules;
 
 public interface Rule {
 }

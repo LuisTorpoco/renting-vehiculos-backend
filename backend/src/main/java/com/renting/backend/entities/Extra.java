@@ -1,5 +1,6 @@
 package com.renting.backend.entities;
 
+import com.renting.backend.enums.ExtraType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

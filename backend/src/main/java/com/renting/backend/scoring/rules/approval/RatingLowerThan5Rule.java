@@ -1,4 +1,4 @@
-package com.renting.backend.controllers.scoring.rules.approval;
+package com.renting.backend.scoring.rules.approval;
 
 public class RatingLowerThan5Rule {
 }

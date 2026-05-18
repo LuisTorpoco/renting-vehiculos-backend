@@ -1,4 +1,4 @@
 package com.renting.backend.entities;
 
-public class LoanRequest {
+public class Request {
 }

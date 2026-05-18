@@ -1,4 +1,4 @@
 package com.renting.backend.repositories;
 
-public class RequestDetailVehicleRepository {
+public class RequestDetailRepository {
 }
