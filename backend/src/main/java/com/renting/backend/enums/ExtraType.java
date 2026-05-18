@@ -1,4 +1,4 @@
-package com.renting.backend.entities;
+package com.renting.backend.enums;
 
 public enum ExtraType {
     FIXED,
