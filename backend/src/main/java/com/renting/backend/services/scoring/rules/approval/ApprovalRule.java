@@ -1,4 +1,7 @@
 package com.renting.backend.services.scoring.rules.approval;
 
-public interface ApprovalRule {
+import com.renting.backend.services.scoring.rules.Rule;
+
+public interface ApprovalRule
+        extends Rule {
 }

@@ -5,7 +5,7 @@ import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Request;
 import com.renting.backend.exception.ResourceNotFoundException;
 import com.renting.backend.repositories.RequestRepository;
-import com.renting.backend.services.ScoringServiceImpl;
+import com.renting.backend.services.ScoringService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ScoringController {
 
-    private final ScoringServiceImpl scoringServiceImpl;
+    private final ScoringService scoringService;
     private final RequestRepository requestRepository;
 
     @PostMapping("/evaluate/{requestId}")
