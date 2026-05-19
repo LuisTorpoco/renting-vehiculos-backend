@@ -5,6 +5,10 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.Setter;
+
 @Getter
 @Setter
 public class CreateRequestDTO {
@@ -15,5 +19,6 @@ public class CreateRequestDTO {
     @NotNull
     private Integer periodInMonths;
 
-    //private List<RequestVehicleDTO> vehicles;
+    @NotEmpty
+    private List<RequestVehicleDTO> vehicles;
 }

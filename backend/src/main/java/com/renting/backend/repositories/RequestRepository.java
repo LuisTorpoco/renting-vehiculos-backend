@@ -16,7 +16,7 @@ public interface RequestRepository
     );
 
     List<Request> findByStateAndIsActive(
-            RequestStatus state,
+            RequestStatus status,
             Integer isActive
     );
 }
