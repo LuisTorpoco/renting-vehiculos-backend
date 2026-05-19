@@ -12,4 +12,6 @@ public class RuleEvaluationResponse {
     private String ruleName;
 
     private Boolean passed;
+
+    private String message;
 }
