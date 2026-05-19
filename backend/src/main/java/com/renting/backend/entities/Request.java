@@ -1,15 +1,11 @@
 package com.renting.backend.entities;
 
-<<<<<<< HEAD
-public class Request {
-}
-=======
 import com.renting.backend.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "request")
@@ -41,6 +37,8 @@ public class Request {
     private Integer periodInMonths;
 
     @Column(name = "is_active", nullable = false)
-    private String isActive;
+    private Integer isActive;
+
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
+    private List<RequestDetail> details;
 }
->>>>>>> feature/gestiones-solicitudes
