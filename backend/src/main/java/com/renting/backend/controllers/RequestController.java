@@ -3,66 +3,60 @@ package com.renting.backend.controllers;
 import com.renting.backend.dtos.request.CreateRequestDTO;
 import com.renting.backend.dtos.request.ResolveRequestDTO;
 import com.renting.backend.dtos.response.RequestResponseDTO;
-import com.renting.backend.enums.RequestStatus;
 import com.renting.backend.services.RequestService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/loan-requests")
+@RequestMapping("/api/requests")
 @RequiredArgsConstructor
 public class RequestController {
+
     private final RequestService requestService;
 
     @PostMapping
-    public ResponseEntity<RequestResponseDTO> createLoanRequest(
-            @RequestBody CreateRequestDTO request
+    public ResponseEntity<RequestResponseDTO> createRequest(
+            @RequestBody @Valid CreateRequestDTO dto
     ) {
+
         RequestResponseDTO response =
-                requestService.createLoanRequest(request);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<RequestResponseDTO> getLoanRequestById(
-            @PathVariable Long id
-    ) {
-        RequestResponseDTO response =
-                requestService.getLoanRequestById(id);
+                requestService.createRequest(dto);
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<RequestResponseDTO>> getAllLoanRequests(
-            @RequestParam(required = false) RequestStatus status
-    ) {
-        List<RequestResponseDTO> responses =
-                requestService.getAllLoanRequests(status);
-        return ResponseEntity.ok(responses);
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLoanRequest(
+    public ResponseEntity<Void> deleteRequest(
             @PathVariable Long id
     ) {
-        requestService.deleteLoanRequest(id);
+
+        requestService.logicalDelete(id);
+
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/resolve")
-    public ResponseEntity<RequestResponseDTO> resolveLoanRequest(
+    @GetMapping("/pending")
+    public ResponseEntity<List<RequestResponseDTO>> getPendingRequests() {
+
+        List<RequestResponseDTO> response =
+                requestService.getPendingRequests();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/resolve")
+    public ResponseEntity<RequestResponseDTO> resolveRequest(
             @PathVariable Long id,
-            @RequestBody ResolveRequestDTO request
+            @RequestBody @Valid ResolveRequestDTO dto
     ) {
+
         RequestResponseDTO response =
-                requestService.resolveLoanRequest(id, request);
+                requestService.resolveRequest(id, dto);
+
         return ResponseEntity.ok(response);
     }
 }
