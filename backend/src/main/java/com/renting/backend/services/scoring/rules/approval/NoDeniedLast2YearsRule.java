@@ -1,4 +1,4 @@
 package com.renting.backend.services.scoring.rules.approval;
 
-public class RatingLowerThan5Rule {
+public class NoDeniedLast2YearsRule {
 }

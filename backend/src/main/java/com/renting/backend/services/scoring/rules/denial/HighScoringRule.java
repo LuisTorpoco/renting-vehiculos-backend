@@ -1,4 +1,4 @@
 package com.renting.backend.services.scoring.rules.denial;
 
-public class ScoringGreaterEqual6Rule {
+public class HighScoringRule {
 }
