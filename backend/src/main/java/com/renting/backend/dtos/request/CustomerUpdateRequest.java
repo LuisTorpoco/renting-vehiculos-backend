@@ -1,26 +1,21 @@
-package com.renting.backend.dtos.response;
+package com.renting.backend.dtos.request;
 
 import com.renting.backend.enums.EmploymentStatus;
-import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@Builder
-public class CustomerResponse {
+public class CustomerUpdateRequest {
 
-    private Long id;
-    private String nif;
     private String name;
     private String firstSurname;
     private String secondSurname;
     private String nationality;
-    private LocalDate birthdate;
-    private BigDecimal scoring;
     private EmploymentStatus employmentStatus;
     private String phone;
+    private BigDecimal scoring;
     private Boolean nonPayment;
     private LocalDate careerTime;
 }
