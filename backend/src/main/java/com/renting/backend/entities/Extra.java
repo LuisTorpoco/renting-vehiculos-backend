@@ -20,12 +20,12 @@ public class Extra {
     @Column(name = "NAME", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "PRICE", nullable = false, precision = 10, scale = 2)
+    @Column(name = "PRICE", precision = 10, scale = 2)
     private BigDecimal price;
 
     @Column(name = "CATEGORY", nullable = false, length = 30)
-    private String category; // Reemplaza a extraType
+    private String category;
 
-    @Column(name = "PERCENTAGE", nullable = false, precision = 5, scale = 2)
+    @Column(name = "PERCENTAGE", precision = 5, scale = 2) 
     private BigDecimal percentage;
 }
