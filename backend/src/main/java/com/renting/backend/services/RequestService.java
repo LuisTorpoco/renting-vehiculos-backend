@@ -1,23 +1,23 @@
 package com.renting.backend.services;
 
-import com.renting.backend.dtos.request.CreateLoanRequest;
-import com.renting.backend.dtos.request.ResolveLoanRequest;
-import com.renting.backend.dtos.response.LoanRequestResponse;
+import com.renting.backend.dtos.request.CreateRequestDTO;
+import com.renting.backend.dtos.request.ResolveRequestDTO;
+import com.renting.backend.dtos.response.RequestResponseDTO;
 import com.renting.backend.enums.RequestStatus;
 
 import java.util.List;
 
 public interface RequestService {
 
-    LoanRequestResponse createLoanRequest(CreateLoanRequest request);
+    RequestResponseDTO createLoanRequest(CreateRequestDTO request);
 
-    LoanRequestResponse getLoanRequestById(Long id);
+    RequestResponseDTO getLoanRequestById(Long id);
 
-    List<LoanRequestResponse> getAllLoanRequests(RequestStatus status);
+    List<RequestResponseDTO> getAllLoanRequests(RequestStatus status);
 
     void deleteLoanRequest(Long id);
 
-    LoanRequestResponse resolveLoanRequest(Long id, ResolveLoanRequest request);
+    RequestResponseDTO resolveLoanRequest(Long id, ResolveRequestDTO request);
 
 
 }

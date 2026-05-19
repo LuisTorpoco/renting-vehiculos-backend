@@ -1,8 +1,8 @@
 package com.renting.backend.services.impl;
 
-import com.renting.backend.dtos.request.CreateLoanRequest;
-import com.renting.backend.dtos.request.ResolveLoanRequest;
-import com.renting.backend.dtos.response.LoanRequestResponse;
+import com.renting.backend.dtos.request.CreateRequestDTO;
+import com.renting.backend.dtos.request.ResolveRequestDTO;
+import com.renting.backend.dtos.response.RequestResponseDTO;
 import com.renting.backend.entities.Request;
 import com.renting.backend.enums.RequestStatus;
 import com.renting.backend.repositories.RequestRepository;
@@ -10,7 +10,6 @@ import com.renting.backend.services.RequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class RequestServiceImpl implements RequestService {
     private final RequestRepository repository;
 
     @Override
-    public LoanRequestResponse createLoanRequest(CreateLoanRequest request) {
+    public RequestResponseDTO createLoanRequest(CreateRequestDTO request) {
         Request entity = Request.builder()
                 .customerId(request.getCustomerId())
                 .createdAt(LocalDateTime.now())
@@ -32,12 +31,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public LoanRequestResponse getLoanRequestById(Long id) {
+    public RequestResponseDTO getLoanRequestById(Long id) {
         return null;
     }
 
     @Override
-    public List<LoanRequestResponse> getAllLoanRequests(RequestStatus status) {
+    public List<RequestResponseDTO> getAllLoanRequests(RequestStatus status) {
         return List.of();
     }
 
@@ -47,7 +46,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public LoanRequestResponse resolveLoanRequest(Long id, ResolveLoanRequest request) {
+    public RequestResponseDTO resolveLoanRequest(Long id, ResolveRequestDTO request) {
         return null;
     }
 }
