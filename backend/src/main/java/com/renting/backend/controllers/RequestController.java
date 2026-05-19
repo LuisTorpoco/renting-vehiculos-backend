@@ -1,8 +1,8 @@
 package com.renting.backend.controllers;
 
-import com.renting.backend.dtos.request.CreateLoanRequest;
-import com.renting.backend.dtos.request.ResolveLoanRequest;
-import com.renting.backend.dtos.response.LoanRequestResponse;
+import com.renting.backend.dtos.request.CreateRequestDTO;
+import com.renting.backend.dtos.request.ResolveRequestDTO;
+import com.renting.backend.dtos.response.RequestResponseDTO;
 import com.renting.backend.enums.RequestStatus;
 import com.renting.backend.services.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +19,10 @@ public class RequestController {
     private final RequestService requestService;
 
     @PostMapping
-    public ResponseEntity<LoanRequestResponse> createLoanRequest(
-            @RequestBody CreateLoanRequest request
+    public ResponseEntity<RequestResponseDTO> createLoanRequest(
+            @RequestBody CreateRequestDTO request
     ) {
-        LoanRequestResponse response =
+        RequestResponseDTO response =
                 requestService.createLoanRequest(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -30,20 +30,20 @@ public class RequestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LoanRequestResponse> getLoanRequestById(
+    public ResponseEntity<RequestResponseDTO> getLoanRequestById(
             @PathVariable Long id
     ) {
-        LoanRequestResponse response =
+        RequestResponseDTO response =
                 requestService.getLoanRequestById(id);
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<LoanRequestResponse>> getAllLoanRequests(
+    public ResponseEntity<List<RequestResponseDTO>> getAllLoanRequests(
             @RequestParam(required = false) RequestStatus status
     ) {
-        List<LoanRequestResponse> responses =
+        List<RequestResponseDTO> responses =
                 requestService.getAllLoanRequests(status);
         return ResponseEntity.ok(responses);
     }
@@ -57,11 +57,11 @@ public class RequestController {
     }
 
     @PutMapping("/{id}/resolve")
-    public ResponseEntity<LoanRequestResponse> resolveLoanRequest(
+    public ResponseEntity<RequestResponseDTO> resolveLoanRequest(
             @PathVariable Long id,
-            @RequestBody ResolveLoanRequest request
+            @RequestBody ResolveRequestDTO request
     ) {
-        LoanRequestResponse response =
+        RequestResponseDTO response =
                 requestService.resolveLoanRequest(id, request);
         return ResponseEntity.ok(response);
     }
