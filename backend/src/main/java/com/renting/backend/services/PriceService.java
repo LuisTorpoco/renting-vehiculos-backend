@@ -3,12 +3,12 @@ package com.renting.backend.services;
 import com.renting.backend.dtos.request.PriceCalculationRequest;
 import com.renting.backend.dtos.response.PriceCalculationResponse;
 import com.renting.backend.entities.Extra;
-import com.renting.backend.entities.ExtraType;
 import com.renting.backend.entities.Vehicle;
 import com.renting.backend.repositories.ExtraRepository;
 import com.renting.backend.repositories.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -20,74 +20,78 @@ public class PriceService {
     private final VehicleRepository vehicleRepository;
     private final ExtraRepository extraRepository;
 
-    //Realiza el cálculo completo del presupuesto de renting según las reglas de negocio establecidas.
-
-    public PriceCalculationResponse calculateRentingPrice(PriceCalculationRequest request) {
-
-        //Validar y recuperar el vehículo de Oracle
+    public PriceCalculationResponse calculatePrice(PriceCalculationRequest request) {
+        // Buscar el vehículo en la base de datos (Usando tu modelo real)
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
-                .orElseThrow(() -> new IllegalArgumentException("Vehículo no encontrado con ID: " + request.getVehicleId()));
+                .orElseThrow(() -> new RuntimeException("Vehículo no encontrado con ID: " + request.getVehicleId()));
 
-        //Recuperar los extras seleccionados por el usuario
-        List<Extra> selectedExtras = extraRepository.findAllById(request.getExtraIds());
+        // Inicializar valores base usando los nombres de tu tabla VEHICLE
+        BigDecimal finalInvestment = vehicle.getPrice();
+        BigDecimal finalMonthlyFee = vehicle.getBaseMonthlyFee();
 
-        //Valores base de la base de datos
-        BigDecimal currentInvestment = vehicle.getBaseInvestment();
-        BigDecimal currentMonthlyFee = vehicle.getBaseMonthlyFee();
+        BigDecimal extraFixedIncrement = BigDecimal.ZERO;
+        BigDecimal extraPercentageIncrement = BigDecimal.ZERO;
 
-        BigDecimal totalFixedIncrement = BigDecimal.ZERO;
-        BigDecimal totalPercentageIncrement = BigDecimal.ZERO;
 
-        //Procesar cada extra según su tipo (FIXED o PERCENTAGE)
-        for (Extra extra : selectedExtras) {
-            if (extra.getExtraType() == ExtraType.FIXED) {
-                //Regla del enunciado: "un importe fijo ... value * 12 a inversión y value a cuota"
-                BigDecimal investmentImpact = extra.getValue().multiply(BigDecimal.valueOf(12));
-                currentInvestment = currentInvestment.add(investmentImpact);
+        if (request.getExtraIds() != null && !request.getExtraIds().isEmpty()) {
+            List<Extra> extras = extraRepository.findAllById(request.getExtraIds());
 
-                currentMonthlyFee = currentMonthlyFee.add(extra.getValue());
-                totalFixedIncrement = totalFixedIncrement.add(extra.getValue());
+            for (Extra extra : extras) {
 
-            } else if (extra.getExtraType() == ExtraType.PERCENTAGE) {
+                if (extra.getPercentage() != null && extra.getPercentage().compareTo(BigDecimal.ZERO) > 0) {
 
-                BigDecimal percentageImpact = vehicle.getBaseMonthlyFee().multiply(extra.getValue());
+                    BigDecimal percentageRate = extra.getPercentage().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
 
-                currentMonthlyFee = currentMonthlyFee.add(percentageImpact);
-                totalPercentageIncrement = totalPercentageIncrement.add(percentageImpact);
+                    BigDecimal increment = vehicle.getBaseMonthlyFee().multiply(percentageRate);
+
+                    extraPercentageIncrement = extraPercentageIncrement.add(increment);
+                }
+
+                else if (extra.getPrice() != null) {
+                    extraFixedIncrement = extraFixedIncrement.add(extra.getPrice());
+                    //Un extra fijo incrementa la inversión inicial (por ejemplo multiplicándolo por un año base)
+                    finalInvestment = finalInvestment.add(extra.getPrice().multiply(BigDecimal.valueOf(12)));
+                }
             }
         }
 
-        int monthsDelta = request.getMonths() - 12;
+        //Aplicar los incrementos de los extras a la cuota mensual
+        finalMonthlyFee = finalMonthlyFee.add(extraFixedIncrement).add(extraPercentageIncrement);
+
+        // Calcular Regla de negocio por Plazo (Meses de contrato)
+        int months = request.getMonths();
         BigDecimal termAdjustment = BigDecimal.ZERO;
 
-        if (monthsDelta < 0) {
-            //Penalización: +10% en la cuota por cada mes que baje de 12
-            int missingMonths = Math.abs(monthsDelta);
-            BigDecimal penaltyRate = BigDecimal.valueOf(0.10).multiply(BigDecimal.valueOf(missingMonths));
-            termAdjustment = vehicle.getBaseMonthlyFee().multiply(penaltyRate);
-            currentMonthlyFee = currentMonthlyFee.add(termAdjustment);
+        if (months < 12) {
+            //Penalización: +10% por cada mes faltante para llegar a 12
+            int missingMonths = 12 - months;
+            BigDecimal penaltyRate = BigDecimal.valueOf(missingMonths)
+                    .multiply(BigDecimal.valueOf(0.10));
 
-        } else if (monthsDelta > 0) {
-            //Bonificación: -3% en la cuota por cada mes que suba de 12, con un tope máximo de un 20% total
-            int extraMonths = monthsDelta;
-            BigDecimal discountRate = BigDecimal.valueOf(0.03).multiply(BigDecimal.valueOf(extraMonths));
+            termAdjustment = finalMonthlyFee.multiply(penaltyRate);
+            finalMonthlyFee = finalMonthlyFee.add(termAdjustment);
+        } else if (months > 12) {
+            //Descuento: -3% por cada mes extra después de 12
+            int extraMonths = months - 12;
+            BigDecimal discountRate = BigDecimal.valueOf(extraMonths)
+                    .multiply(BigDecimal.valueOf(0.03));
 
-            //Aplicar el tope del 20% (0.20)
+            // El descuento no puede superar el 20% total
             BigDecimal maxDiscountRate = BigDecimal.valueOf(0.20);
             if (discountRate.compareTo(maxDiscountRate) > 0) {
                 discountRate = maxDiscountRate;
             }
 
-            termAdjustment = vehicle.getBaseMonthlyFee().multiply(discountRate).negate(); // Negativo porque resta
-            currentMonthlyFee = currentMonthlyFee.add(termAdjustment);
+            termAdjustment = finalMonthlyFee.multiply(discountRate).negate(); // Negativo porque resta
+            finalMonthlyFee = finalMonthlyFee.add(termAdjustment);
         }
 
-        // Construir la respuesta con redondeo comercial a 2 decimales
+        // Construir y devolver la respuesta con redondeo comercial a 2 decimales
         return PriceCalculationResponse.builder()
-                .finalInvestment(currentInvestment.setScale(2, RoundingMode.HALF_UP))
-                .finalMonthlyFee(currentMonthlyFee.setScale(2, RoundingMode.HALF_UP))
-                .extraFixedIncrement(totalFixedIncrement.setScale(2, RoundingMode.HALF_UP))
-                .extraPercentageIncrement(totalPercentageIncrement.setScale(2, RoundingMode.HALF_UP))
+                .finalInvestment(finalInvestment.setScale(2, RoundingMode.HALF_UP))
+                .finalMonthlyFee(finalMonthlyFee.setScale(2, RoundingMode.HALF_UP))
+                .extraFixedIncrement(extraFixedIncrement.setScale(2, RoundingMode.HALF_UP))
+                .extraPercentageIncrement(extraPercentageIncrement.setScale(2, RoundingMode.HALF_UP))
                 .termAdjustment(termAdjustment.setScale(2, RoundingMode.HALF_UP))
                 .build();
     }
