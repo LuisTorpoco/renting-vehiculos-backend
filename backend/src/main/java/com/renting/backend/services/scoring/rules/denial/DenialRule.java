@@ -1,0 +1,4 @@
+package com.renting.backend.services.scoring.rules.denial;
+
+public interface DenialRule {
+}
