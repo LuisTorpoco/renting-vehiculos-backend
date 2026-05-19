@@ -20,15 +20,15 @@ public class ScoringContext
 
     private List<Income> incomes;
 
-    private BigDecimal
-            averagePreTaxes;
+    private BigDecimal averagePreTaxes;
 
-    private BigDecimal
-            averagePostTaxes;
+    private BigDecimal averagePostTaxes;
 
-    private boolean
-            deniedLastTwoYears;
+    private Boolean deniedLastTwoYears;
 
-    private boolean
-            approvedWithWarranties;
+    private Boolean approvedWithWarranties;
+
+    private BigDecimal monthlyFee;
+
+    private BigDecimal vehicleInvestment;
 }

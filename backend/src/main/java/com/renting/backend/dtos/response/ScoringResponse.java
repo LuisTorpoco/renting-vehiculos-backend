@@ -11,11 +11,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ScoringResponse {
 
+    private Long requestId;
+
     private Boolean automaticallyApproved;
 
     private Boolean automaticallyDenied;
 
     private String reason;
 
-    private List<RuleEvaluationResponse> rules;
+    private List<RuleEvaluationResponse> evaluatedRules;
 }
