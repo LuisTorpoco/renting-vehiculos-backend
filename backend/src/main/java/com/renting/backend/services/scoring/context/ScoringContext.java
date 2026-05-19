@@ -1,4 +1,4 @@
-package com.renting.backend.scoring.context;
+package com.renting.backend.services.scoring.context;
 
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Income;

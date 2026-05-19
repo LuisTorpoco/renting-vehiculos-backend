@@ -1,4 +1,4 @@
-package com.renting.backend.scoring.rules.approval;
+package com.renting.backend.services.scoring.rules.approval;
 
 public class InvestmentLowerThan80KRule {
 }

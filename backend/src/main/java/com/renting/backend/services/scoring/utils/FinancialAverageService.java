@@ -1,4 +1,4 @@
-package com.renting.backend.scoring.utils;
+package com.renting.backend.services.scoring.utils;
 
 public interface FinancialAverageService {
 }

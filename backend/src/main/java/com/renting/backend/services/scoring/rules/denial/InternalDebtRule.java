@@ -1,4 +1,4 @@
-package com.renting.backend.scoring.rules.denial;
+package com.renting.backend.services.scoring.rules.denial;
 
 public class InternalDebtRule {
 }

@@ -1,4 +1,4 @@
-package com.renting.backend.scoring.engine;
+package com.renting.backend.services.scoring.engine;
 
 public class ApprovalRulesEngine {
 }
