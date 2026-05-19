@@ -1,13 +1,14 @@
-package com.renting.backend.services;
+package com.renting.backend.services.impl;
 
 import com.renting.backend.dtos.response.RuleEvaluationResponse;
 import com.renting.backend.dtos.response.ScoringResponse;
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Income;
 import com.renting.backend.entities.Request;
+import com.renting.backend.enums.RequestStatus;
 import com.renting.backend.repositories.IncomeRepository;
 import com.renting.backend.repositories.RequestRepository;
-import com.renting.backend.services.ScoringService;
+import com.renting.backend.services.interfaces.ScoringService;
 import com.renting.backend.services.scoring.context.ScoringContext;
 import com.renting.backend.services.scoring.engine.ApprovalRulesEngine;
 import com.renting.backend.services.scoring.engine.DenialRulesEngine;
@@ -15,21 +16,28 @@ import com.renting.backend.services.scoring.utils.FinancialAverageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ScoringServiceImpl implements ScoringService {
+public class ScoringServiceImpl
+        implements ScoringService {
 
-    private final IncomeRepository incomeRepository;
-    private final RequestRepository requestRepository;
+    private final IncomeRepository
+            incomeRepository;
 
-    private final ApprovalRulesEngine approvalRulesEngine;
-    private final DenialRulesEngine denialRulesEngine;
+    private final RequestRepository
+            requestRepository;
 
-    private final FinancialAverageService financialAverageService;
+    private final ApprovalRulesEngine
+            approvalRulesEngine;
+
+    private final DenialRulesEngine
+            denialRulesEngine;
+
+    private final FinancialAverageService
+            financialAverageService;
 
     @Override
     public ScoringResponse evaluate(
@@ -39,34 +47,24 @@ public class ScoringServiceImpl implements ScoringService {
 
         List<Income> incomes =
                 incomeRepository
-                        .findByCustomerOrdered(
+                        .findByCustomerIdOrderByCreatedAtDesc(
                                 customer.getId()
-                        );
-
-        BigDecimal averagePreTaxes =
-                financialAverageService
-                        .calculateAveragePreTaxes(
-                                incomes
-                        );
-
-        BigDecimal averagePostTaxes =
-                financialAverageService
-                        .calculateAveragePostTaxes(
-                                incomes
                         );
 
         boolean deniedLastTwoYears =
                 requestRepository
-                        .deniedRequests(
+                        .countByCustomerIdAndStateAndCreatedAtGreaterThanEqual(
                                 customer.getId(),
+                                RequestStatus.DENIED,
                                 LocalDateTime.now()
                                         .minusYears(2)
                         ) > 0;
 
         boolean approvedWithWarranties =
                 requestRepository
-                        .approvedWithWarranties(
+                        .countByCustomerIdAndStateAndCreatedAtGreaterThanEqual(
                                 customer.getId(),
+                                RequestStatus.APPROVED_WITH_WARRANTIES,
                                 LocalDateTime.now()
                                         .minusYears(2)
                         ) > 0;
@@ -77,10 +75,16 @@ public class ScoringServiceImpl implements ScoringService {
                         .request(request)
                         .incomes(incomes)
                         .averagePreTaxes(
-                                averagePreTaxes
+                                financialAverageService
+                                        .calculateAveragePreTaxes(
+                                                incomes
+                                        )
                         )
                         .averagePostTaxes(
-                                averagePostTaxes
+                                financialAverageService
+                                        .calculateAveragePostTaxes(
+                                                incomes
+                                        )
                         )
                         .deniedLastTwoYears(
                                 deniedLastTwoYears
@@ -97,16 +101,15 @@ public class ScoringServiceImpl implements ScoringService {
 
         boolean autoDenied =
                 deniedRules.stream()
-                        .anyMatch(rule ->
-                                Boolean.TRUE.equals(
-                                        rule.getPassed()
-                                ));
+                        .anyMatch(
+                                RuleEvaluationResponse::getPassed
+                        );
 
         if (autoDenied) {
 
             return ScoringResponse
                     .builder()
-                    .automaticallyDenied(false)
+                    .automaticallyApproved(false)
                     .automaticallyDenied(true)
                     .reason(
                             "Automatic denial"
@@ -118,16 +121,15 @@ public class ScoringServiceImpl implements ScoringService {
         }
 
         List<RuleEvaluationResponse>
-                approvalRules =
+                approvedRules =
                 approvalRulesEngine
                         .evaluate(context);
 
         boolean autoApproved =
-                approvalRules.stream()
-                        .allMatch(rule ->
-                                Boolean.TRUE.equals(
-                                        rule.getPassed()
-                                ));
+                approvedRules.stream()
+                        .allMatch(
+                                RuleEvaluationResponse::getPassed
+                        );
 
         if (autoApproved) {
 
@@ -139,7 +141,7 @@ public class ScoringServiceImpl implements ScoringService {
                             "Automatic approval"
                     )
                     .evaluatedRules(
-                            approvalRules
+                            approvedRules
                     )
                     .build();
         }
@@ -152,7 +154,7 @@ public class ScoringServiceImpl implements ScoringService {
                         "Pending analyst review"
                 )
                 .evaluatedRules(
-                        approvalRules
+                        approvedRules
                 )
                 .build();
     }
