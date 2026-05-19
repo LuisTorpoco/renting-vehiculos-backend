@@ -11,7 +11,7 @@ public class RequestMapper {
 
         return RequestResponseDTO.builder()
                 .id(request.getId())
-                .customerId(request.getCustomerId())
+                .customerId(request.getCustomer().getId())
                 .status(request.getState())
                 .periodInMonths(request.getPeriodInMonths())
                 .createdAt(request.getCreatedAt())

@@ -20,8 +20,12 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "customer_id", nullable = false)
-    private Long customerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "customer_id",
+            nullable = false
+    )
+    private Customer customer;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -39,6 +43,9 @@ public class Request {
     @Column(name = "is_active", nullable = false)
     private Integer isActive;
 
-    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
+    @OneToMany(
+            mappedBy = "request",
+            cascade = CascadeType.ALL
+    )
     private List<RequestDetail> details;
 }
