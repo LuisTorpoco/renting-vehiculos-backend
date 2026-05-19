@@ -36,8 +36,8 @@ public class Customer {
             "second_surname")
     private String secondSurname;
 
-    @Column(name = "nacionality")
-    private String nacionality;
+    @Column(name = "nationality")
+    private String nationality;
 
     @Column(nullable = false)
     private LocalDate birthdate;
