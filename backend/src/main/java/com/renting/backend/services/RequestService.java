@@ -3,21 +3,19 @@ package com.renting.backend.services;
 import com.renting.backend.dtos.request.CreateRequestDTO;
 import com.renting.backend.dtos.request.ResolveRequestDTO;
 import com.renting.backend.dtos.response.RequestResponseDTO;
-import com.renting.backend.enums.RequestStatus;
 
 import java.util.List;
 
 public interface RequestService {
 
-    RequestResponseDTO createLoanRequest(CreateRequestDTO request);
+    RequestResponseDTO createRequest(CreateRequestDTO dto);
 
-    RequestResponseDTO getLoanRequestById(Long id);
+    void logicalDelete(Long requestId);
 
-    List<RequestResponseDTO> getAllLoanRequests(RequestStatus status);
+    List<RequestResponseDTO> getPendingRequests();
 
-    void deleteLoanRequest(Long id);
-
-    RequestResponseDTO resolveLoanRequest(Long id, ResolveRequestDTO request);
-
-
+    RequestResponseDTO resolveRequest(
+            Long requestId,
+            ResolveRequestDTO dto
+    );
 }
