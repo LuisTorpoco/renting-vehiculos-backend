@@ -1,58 +1,49 @@
 package com.renting.backend.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.math.BigDecimal;
-import java.util.List;
 
-@Data
-@Builder
+@Entity
+@Table(name = "VEHICLE")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "VEHICLES")
+@Builder
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "brand", nullable = false, length = 100)
-    private String brand; // Marca
+    @Column(name = "LICENSE_PLATE", unique = true, nullable = false, length = 10)
+    private String licensePlate;
 
-    @Column(name = "model", nullable = false, length = 100)
-    private String model; // Modelo
+    @Column(name = "BRAND", nullable = false, length = 30)
+    private String brand;
 
-    @Column(name = "engine_displacement", length = 50)
-    private String engineDisplacement; // Cilindrada
+    @Column(name = "MODEL", nullable = false, length = 30)
+    private String model;
 
-    @Column(name = "power")
-    private Integer power; // Potencia en CV
+    @Column(name = "PRICE", nullable = false, precision = 10, scale = 2)
+    private BigDecimal price; // Reemplaza a baseInvestment
 
-    @Column(name = "color", length = 50)
+    @Column(name = "CC", nullable = false)
+    private Integer cc;
+
+    @Column(name = "POTENCY", nullable = false)
+    private Integer potency;
+
+    @Column(name = "COLOR", nullable = false, length = 20)
     private String color;
 
-    @Column(name = "seats")
-    private Integer seats; // Número de plazas
+    @Column(name = "SPOTS", nullable = false)
+    private Integer spots;
 
-    @Column(name = "base_investment", nullable = false, precision = 12, scale = 2)
-    private BigDecimal baseInvestment; // Inversión inicial base del coche
+    @Column(name = "BASE_MONTHLY_FEE", nullable = false, precision = 10, scale = 2)
+    private BigDecimal baseMonthlyFee;
 
-    @Column(name = "base_monthly_fee", nullable = false, precision = 10, scale = 2)
-    private BigDecimal baseMonthlyFee; // Cuota mensual base calculada a 12 meses
-
-    @Column(name = "is_active", nullable = false)
-    private Integer isActive = 1; // Borrado lógico para el catálogo
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "VEHICLE_EXTRAS",
-            joinColumns = @JoinColumn(name = "vehicle_id"),
-            inverseJoinColumns = @JoinColumn(name = "extra_id")
-    )
-    private List<Extra> availableExtras;
+    @Column(name = "AVAILABLE", nullable = false)
+    private Integer available; // 1 = Disponible, 0 = No disponible (Reemplaza a isActive)
 }
