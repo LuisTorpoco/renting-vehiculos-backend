@@ -19,4 +19,6 @@ public class RequestResponseDTO {
     private Integer periodInMonths;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime resolutionDate;
 }
