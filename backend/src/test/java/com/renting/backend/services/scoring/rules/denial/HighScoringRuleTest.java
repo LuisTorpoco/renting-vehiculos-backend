@@ -24,17 +24,25 @@ class HighScoringRuleTest {
     }
 
     @Test
-    @DisplayName("Debe retornar true cuando scoring < 6")
-    void testEvaluarScoringBajo() {
-        customer.setScoring(BigDecimal.valueOf(5));
+    @DisplayName("Debe retornar true cuando scoring > 6")
+    void testEvaluarScoringMayorA6() {
+        customer.setScoring(BigDecimal.valueOf(7));
         context = ScoringContext.builder().customer(customer).build();
         assertTrue(rule.evaluate(context));
     }
 
     @Test
-    @DisplayName("Debe retornar false cuando scoring >= 6")
-    void testEvaluarScoringAlto() {
+    @DisplayName("Debe retornar false cuando scoring es igual a 6")
+    void testEvaluarScoringIgualA6() {
         customer.setScoring(BigDecimal.valueOf(6));
+        context = ScoringContext.builder().customer(customer).build();
+        assertFalse(rule.evaluate(context));
+    }
+
+    @Test
+    @DisplayName("Debe retornar false cuando scoring es menor a 6")
+    void testEvaluarScoringMenorA6() {
+        customer.setScoring(BigDecimal.valueOf(5));
         context = ScoringContext.builder().customer(customer).build();
         assertFalse(rule.evaluate(context));
     }
@@ -45,5 +53,6 @@ class HighScoringRuleTest {
         String msg = rule.getMessage();
         assertNotNull(msg);
         assertFalse(msg.isEmpty());
+        assertTrue(msg.contains("6"));
     }
 }
