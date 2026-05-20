@@ -6,7 +6,7 @@ import com.renting.backend.enums.EmploymentStatus;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CriticalRiskRule implements Rule {
+public class CriticalRiskRule implements DenialRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {

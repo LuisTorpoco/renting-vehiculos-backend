@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @Component
-public class MaxAgePlusMonthsRule implements Rule {
+public class MaxAgePlusMonthsRule implements DenialRule {
 
     private static final int MAX_AGE_PLUS_MONTHS = 80;
 

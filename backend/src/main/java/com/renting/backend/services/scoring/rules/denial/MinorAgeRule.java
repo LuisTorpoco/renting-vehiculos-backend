@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @Component
-public class MinorAgeRule implements Rule {
+public class MinorAgeRule implements DenialRule {
 
     private static final int LEGAL_AGE = 18;
 

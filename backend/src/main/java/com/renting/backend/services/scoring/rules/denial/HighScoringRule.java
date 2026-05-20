@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 @Component
-public class HighScoringRule implements Rule {
+public class HighScoringRule implements DenialRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {

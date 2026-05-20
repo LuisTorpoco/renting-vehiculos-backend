@@ -5,7 +5,7 @@ import com.renting.backend.services.scoring.rules.Rule;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InactiveCustomerRule implements Rule {
+public class InactiveCustomerRule implements DenialRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {

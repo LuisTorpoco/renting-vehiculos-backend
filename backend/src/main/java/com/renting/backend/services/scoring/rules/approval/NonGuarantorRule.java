@@ -5,7 +5,7 @@ import com.renting.backend.services.scoring.rules.Rule;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NonGuarantorRule implements Rule {
+public class NonGuarantorRule implements ApprovalRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {

@@ -5,7 +5,7 @@ import com.renting.backend.services.scoring.rules.Rule;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SpanishNationalityRule implements Rule {
+public class SpanishNationalityRule implements ApprovalRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
