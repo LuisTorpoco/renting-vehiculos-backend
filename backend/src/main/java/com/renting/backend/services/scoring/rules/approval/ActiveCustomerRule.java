@@ -9,13 +9,13 @@ public class ActiveCustomerRule implements Rule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
-        // Usamos .getActive() que es el método real generado por Lombok para tu entidad Customer
-        Boolean isActive = context.getCustomer().getActive();
-        return isActive != null && isActive;
+        // En Oracle: 1 = Activo, 0 = Inactivo.
+        Integer isActive = context.getCustomer().getIsActive();
+        return isActive != null && isActive == 1;
     }
 
     @Override
     public String getMessage() {
-        return "Fallo de aprobación: El cliente no dispone de un expediente activo.";
+        return "La cuenta del cliente está activa y verificada de manera positiva.";
     }
 }
