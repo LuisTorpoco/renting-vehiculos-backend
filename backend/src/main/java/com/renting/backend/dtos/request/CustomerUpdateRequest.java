@@ -17,4 +17,5 @@ public class CustomerUpdateRequest {
     private BigDecimal scoring;
     private Integer nonPayment;
     private LocalDate careerTime;
+    private LocalDate birthDate;
 }

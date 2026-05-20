@@ -10,26 +10,11 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    @Query("""
-        SELECT c
-        FROM Customer c
-        WHERE c.id = :id
-        AND c.isActive = 1
-    """)
+    @Query("SELECT c FROM Customer c WHERE c.id = :id AND c.isActive = 1")
     Optional<Customer> findActiveById(@Param("id") Long id);
 
-    @Query("""
-        SELECT c
-        FROM Customer c
-        WHERE c.isActive = 1
-    """)
-    Page<Customer> findAllActive(Pageable pageable);
+    Page<Customer> findByIsActive(Integer isActive, Pageable pageable);
 
-    @Query("""
-        SELECT COUNT(r) > 0
-        FROM Request r
-        WHERE r.customer.id = :id
-        AND r.isActive = 1
-    """)
+    @Query("SELECT COUNT(r) > 0 FROM Request r WHERE r.customer.id = :id AND r.isActive = 1")
     boolean hasActiveRequests(@Param("id") Long id);
 }

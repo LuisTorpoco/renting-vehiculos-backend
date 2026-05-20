@@ -34,7 +34,7 @@ public class Customer {
     private String nationality;
 
     @Column(nullable = false)
-    private LocalDate birthdate;
+    private LocalDate birthDate;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal scoring;

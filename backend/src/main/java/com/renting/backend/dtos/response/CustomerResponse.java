@@ -16,7 +16,7 @@ public class CustomerResponse {
     private String firstSurname;
     private String secondSurname;
     private String nationality;
-    private LocalDate birthdate;
+    private LocalDate birthDate;
     private BigDecimal scoring;
     private String employmentStatus;
     private String phone;

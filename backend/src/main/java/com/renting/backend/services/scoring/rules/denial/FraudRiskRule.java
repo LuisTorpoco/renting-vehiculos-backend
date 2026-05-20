@@ -11,7 +11,7 @@ public class FraudRiskRule implements Rule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
-        LocalDate birthDate = context.getCustomer().getBirthdate();
+        LocalDate birthDate = context.getCustomer().getBirthDate();
         if (birthDate == null) return false;
 
         int age = Period.between(birthDate, LocalDate.now()).getYears();

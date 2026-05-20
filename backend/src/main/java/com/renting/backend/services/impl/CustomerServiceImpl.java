@@ -4,6 +4,7 @@ import com.renting.backend.dtos.request.*;
 import com.renting.backend.dtos.response.CustomerResponse;
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Income;
+import com.renting.backend.exception.BusinessException;
 import com.renting.backend.mapper.CustomerMapper;
 import com.renting.backend.repositories.CustomerRepository;
 import com.renting.backend.repositories.IncomeRepository;
@@ -60,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow();
 
         if (repository.hasActiveRequests(id)) {
-            throw new RuntimeException("Customer has active requests");
+            throw new BusinessException("No se puede eliminar el cliente porque tiene solicitudes activas.");
         }
 
         c.setIsActive(0);
@@ -80,8 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Page<CustomerResponse> list(Pageable pageable) {
 
-        return repository.findAllActive(pageable)
-                .map(mapper::toResponse);
+        return repository.findByIsActive(1,pageable).map(mapper::toResponse);
     }
 
     @Override
