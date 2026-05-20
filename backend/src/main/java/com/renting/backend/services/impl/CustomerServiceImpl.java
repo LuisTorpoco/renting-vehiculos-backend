@@ -34,10 +34,20 @@ public class CustomerServiceImpl implements CustomerService {
         if (request.getFirstSurname() != null) c.setFirstSurname(request.getFirstSurname());
         if (request.getSecondSurname() != null) c.setSecondSurname(request.getSecondSurname());
         if (request.getNationality() != null) c.setNationality(request.getNationality());
-        if (request.getEmploymentStatus() != null) c.setEmploymentStatus(request.getEmploymentStatus());
+
+        // Corregido: Se asigna el String directamente (ya que EmploymentStatus se cambió a String en la entidad)
+        if (request.getEmploymentStatus() != null) {
+            c.setEmploymentStatus(request.getEmploymentStatus().name());
+        }
+
         if (request.getPhone() != null) c.setPhone(request.getPhone());
         if (request.getScoring() != null) c.setScoring(request.getScoring());
-        if (request.getNonPayment() != null) c.setNonPayment(request.getNonPayment());
+
+        // Corregido: Convierte el Boolean del Request a Integer (1 = true, 0 = false) para Oracle
+        if (request.getNonPayment() != null) {
+            c.setNonPayment(request.getNonPayment() ? 1 : 0);
+        }
+
         if (request.getCareerTime() != null) c.setCareerTime(request.getCareerTime());
 
         return mapper.toResponse(repository.save(c));
@@ -53,7 +63,8 @@ public class CustomerServiceImpl implements CustomerService {
             throw new RuntimeException("Customer has active requests");
         }
 
-        c.setActive(false);
+        // Corregido: Cambiado c.setActive(false) por c.setIsActive(0) para cumplir con el NUMBER(1) de Oracle
+        c.setIsActive(0);
         repository.save(c);
     }
 
