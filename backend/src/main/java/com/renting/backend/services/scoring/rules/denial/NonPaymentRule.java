@@ -9,13 +9,13 @@ public class NonPaymentRule implements Rule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
-        Boolean hasNonPayment = context.getCustomer().getNonPayment();
-        // Si es nulo o es true, significa que tiene impagos devuelve false falla
-        return hasNonPayment != null && !hasNonPayment;
+        // En Oracle: 1 = Tiene impagos activos (True), 0 = Sin deudas (False).
+        Integer nonPayment = context.getCustomer().getNonPayment();
+        return nonPayment != null && nonPayment == 1;
     }
 
     @Override
     public String getMessage() {
-        return "Solicitud denegada: El cliente figura en el registro de impagos (morosidad).";
+        return "Solicitud denegada: El cliente cuenta con registros de impagos activos.";
     }
 }
