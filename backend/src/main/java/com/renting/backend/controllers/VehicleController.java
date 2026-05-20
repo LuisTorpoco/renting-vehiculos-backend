@@ -28,6 +28,28 @@ public class VehicleController {
         return ResponseEntity.ok(vehicles);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Vehicle>
+    getVehicleById(
+            @PathVariable
+            Long id
+    ) {
+
+        Vehicle vehicle =
+                vehicleRepository
+                        .findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Vehicle not found with id: "
+                                                + id
+                                )
+                        );
+
+        return ResponseEntity.ok(
+                vehicle
+        );
+    }
+
     @PostMapping("/calculate-price")
     public ResponseEntity<PriceCalculationResponse> calculatePrice(@Valid @RequestBody PriceCalculationRequest request) {
         PriceCalculationResponse response = priceService.calculatePrice(request);
