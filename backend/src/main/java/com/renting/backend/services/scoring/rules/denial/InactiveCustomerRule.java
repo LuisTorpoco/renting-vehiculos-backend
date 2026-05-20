@@ -9,12 +9,13 @@ public class InactiveCustomerRule implements Rule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
-        Boolean isActive = context.getCustomer().getActive();
-        return isActive != null && isActive;
+        // En Oracle: 0 significa que la cuenta está inactiva/bloqueada.
+        Integer isActive = context.getCustomer().getIsActive();
+        return isActive != null && isActive == 0;
     }
 
     @Override
     public String getMessage() {
-        return "Solicitud denegada: El expediente del cliente se encuentra inactivo.";
+        return "El perfil del cliente se encuentra inactivo en el sistema.";
     }
 }
