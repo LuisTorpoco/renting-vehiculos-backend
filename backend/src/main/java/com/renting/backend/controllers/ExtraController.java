@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/extras")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ExtraController {
 
     private final ExtraRepository
