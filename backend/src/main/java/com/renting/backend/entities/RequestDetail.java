@@ -4,29 +4,28 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "request_detail")
+@Table(name = "REQUEST_DETAIL")
+@IdClass(RequestDetailId.class)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class RequestDetail {
+
     @Id
-    @Column(name = "id_request")
+    @Column(name = "ID_REQUEST")
     private Long requestId;
 
     @Id
-    @Column(name = "id_vehicle")
+    @Column(name = "ID_VEHICLE")
     private Long vehicleId;
 
-    @Column(name = "id_extra")
+    @Id
+    @Column(name = "ID_EXTRA")
     private Long extraId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "id_request",
-            insertable = false,
-            updatable = false
-    )
+    @JoinColumn(name = "ID_REQUEST", insertable = false, updatable = false)
     private Request request;
 }
