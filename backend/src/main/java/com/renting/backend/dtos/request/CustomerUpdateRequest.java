@@ -1,6 +1,5 @@
 package com.renting.backend.dtos.request;
 
-import com.renting.backend.enums.EmploymentStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,9 +12,9 @@ public class CustomerUpdateRequest {
     private String firstSurname;
     private String secondSurname;
     private String nationality;
-    private EmploymentStatus employmentStatus;
+    private String employmentStatus;
     private String phone;
     private BigDecimal scoring;
-    private Boolean nonPayment;
+    private Integer nonPayment;
     private LocalDate careerTime;
 }

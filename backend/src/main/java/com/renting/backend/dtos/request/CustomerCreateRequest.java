@@ -1,6 +1,5 @@
 package com.renting.backend.dtos.request;
 
-import com.renting.backend.enums.EmploymentStatus;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -32,14 +31,14 @@ public class CustomerCreateRequest {
     @DecimalMax("10.0")
     private BigDecimal scoring;
 
-    @NotNull
-    private EmploymentStatus employmentStatus;
+    @NotBlank
+    private String employmentStatus;
 
     @NotBlank
     private String phone;
 
     @NotNull
-    private Boolean nonPayment;
+    private Integer nonPayment;
 
     @NotNull
     private LocalDate careerTime;

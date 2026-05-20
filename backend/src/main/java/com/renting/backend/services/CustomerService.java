@@ -1,8 +1,9 @@
 package com.renting.backend.services;
 
 import com.renting.backend.dtos.request.*;
-import com.renting.backend.dtos.response.*;
-import org.springframework.data.domain.*;
+import com.renting.backend.dtos.response.CustomerResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CustomerService {
 
@@ -15,4 +16,6 @@ public interface CustomerService {
     CustomerResponse findById(Long id);
 
     Page<CustomerResponse> list(Pageable pageable);
+
+    void addIncome(Long customerId, IncomeRequest request);
 }
