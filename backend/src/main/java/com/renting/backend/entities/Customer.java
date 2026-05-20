@@ -1,73 +1,56 @@
 package com.renting.backend.entities;
 
-import com.renting.backend.enums.EmploymentStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "CUSTOMER")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy =
-            GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,
-            unique = true,
-            length = 10)
+    @Column(nullable = false, unique = true, length = 10)
     private String nif;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(name = "first_surname",
-            nullable = false)
+    @Column(name = "FIRST_SURNAME", nullable = false, length = 40)
     private String firstSurname;
 
-    @Column(name =
-            "second_surname")
+    @Column(name = "SECOND_SURNAME", length = 40)
     private String secondSurname;
 
-    @Column(name = "nationality")
+    @Column(nullable = false, length = 20)
     private String nationality;
 
     @Column(nullable = false)
     private LocalDate birthdate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal scoring;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name =
-            "employment_status")
-    private EmploymentStatus
-            employmentStatus;
+    @Column(name = "EMPLOYMENT_STATUS", length = 30)
+    private String employmentStatus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 20)
     private String phone;
 
-    @Column(name = "non_payment")
-    private Boolean nonPayment;
+    @Column(name = "NON_PAYMENT", nullable = false)
+    private Integer nonPayment;
 
-    @Column(name = "is_active")
-    private Boolean active;
+    @Column(name = "IS_ACTIVE", nullable = false)
+    private Integer isActive;
 
-    @Column(name = "career_time")
+    @Column(name = "CAREER_TIME", nullable = false)
     private LocalDate careerTime;
-
-    @OneToMany(mappedBy =
-            "customer")
-    private List<Income> incomes;
-
-    @OneToMany(mappedBy =
-            "customer")
-    private List<Request> requests;
 }

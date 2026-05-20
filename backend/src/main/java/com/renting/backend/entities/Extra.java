@@ -26,6 +26,9 @@ public class Extra {
     @Column(name = "CATEGORY", nullable = false, length = 30)
     private String category;
 
-    @Column(name = "PERCENTAGE", precision = 5, scale = 2) 
+    @Column(name = "PERCENTAGE", precision = 5, scale = 2)
     private BigDecimal percentage;
+
+    @Column(name = "IS_ACTIVE")
+    private Integer isActive;
 }
