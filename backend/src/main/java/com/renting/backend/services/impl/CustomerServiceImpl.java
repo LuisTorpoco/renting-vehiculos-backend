@@ -4,6 +4,7 @@ import com.renting.backend.dtos.request.*;
 import com.renting.backend.dtos.response.CustomerResponse;
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Income;
+import com.renting.backend.exception.BusinessException;
 import com.renting.backend.mapper.CustomerMapper;
 import com.renting.backend.repositories.CustomerRepository;
 import com.renting.backend.repositories.IncomeRepository;
@@ -59,8 +60,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer c = repository.findActiveById(id)
                 .orElseThrow();
 
-        if (repository.hasActiveRequests(id)) {
-            throw new RuntimeException("Customer has active requests");
+        if (repository.hasPendingRequests(id)) {
+            throw new BusinessException("Customer has active requests");
         }
 
         c.setIsActive(0);

@@ -26,12 +26,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Page<Customer> findAllActive(Pageable pageable);
 
     @Query("""
-        SELECT COUNT(r) > 0
-        FROM Request r
-        WHERE r.customer.id = :id
-        AND r.isActive = 1
-    """)
-    boolean hasActiveRequests(@Param("id") Long id);
+    SELECT COUNT(r) > 0
+    FROM Request r
+    WHERE r.customer.id = :id
+    AND r.state = 'PENDING_ANALYST'
+""")
+    boolean hasPendingRequests(@Param("id") Long id);
 
     long countByIsActive(Integer isActive);
 }
