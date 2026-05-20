@@ -10,4 +10,6 @@ import java.util.List;
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     // Busca solo los coches que tengan AVAILABLE = 1 osea disponible
     List<Vehicle> findByAvailable(Integer available);
+
+    long countByAvailable(Integer available);
 }

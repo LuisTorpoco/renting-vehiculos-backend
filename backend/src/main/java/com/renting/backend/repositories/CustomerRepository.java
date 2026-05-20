@@ -32,4 +32,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
         AND r.isActive = 1
     """)
     boolean hasActiveRequests(@Param("id") Long id);
+
+    long countByIsActive(Integer isActive);
 }
