@@ -13,6 +13,7 @@ import com.renting.backend.repositories.CustomerRepository;
 import com.renting.backend.repositories.IncomeRepository;
 import com.renting.backend.services.CustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
@@ -62,7 +64,9 @@ public class CustomerServiceImpl implements CustomerService {
         var customer = repository.findActiveById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
-        if (repository.hasPendingRequests(id, RequestStatus.PENDING_ANALYST.name())) {
+        log.info(RequestStatus.PENDING_ANALYST.toString());
+
+        if (repository.hasPendingRequests(id, RequestStatus.PENDING_ANALYST)) {
             throw new ConflictException(
                     "No se puede borrar el cliente: tiene solicitudes pendientes."
             );
