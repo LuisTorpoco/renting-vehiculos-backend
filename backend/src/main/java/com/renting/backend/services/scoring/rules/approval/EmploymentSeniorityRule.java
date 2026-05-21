@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @Component
-public class EmploymentSeniorityRule implements Rule {
+public class EmploymentSeniorityRule implements ApprovalRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {

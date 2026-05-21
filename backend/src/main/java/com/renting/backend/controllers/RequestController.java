@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/requests")
+@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class RequestController {
 
@@ -57,6 +58,11 @@ public class RequestController {
         RequestResponseDTO response =
                 requestService.resolveRequest(id, dto);
 
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping
+    public ResponseEntity<List<RequestResponseDTO>> getAllRequests() {
+        List<RequestResponseDTO> response = requestService.getAllRequests();
         return ResponseEntity.ok(response);
     }
 }

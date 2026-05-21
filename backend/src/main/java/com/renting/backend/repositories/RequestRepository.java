@@ -23,4 +23,8 @@ public interface RequestRepository
 
     long countByCustomerIdAndStateAndCreatedAtGreaterThanEqual
             (Long customerId,RequestStatus state,LocalDateTime date);
+
+    long countByIsActive(Integer isActive);
+
+    long countByStateAndIsActive(RequestStatus state, Integer isActive);
 }

@@ -1,6 +1,5 @@
 package com.renting.backend.dtos.response;
 
-import com.renting.backend.enums.EmploymentStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,8 +18,8 @@ public class CustomerResponse {
     private String nationality;
     private LocalDate birthdate;
     private BigDecimal scoring;
-    private EmploymentStatus employmentStatus;
+    private String employmentStatus;
     private String phone;
-    private Boolean nonPayment;
+    private Integer nonPayment;
     private LocalDate careerTime;
 }

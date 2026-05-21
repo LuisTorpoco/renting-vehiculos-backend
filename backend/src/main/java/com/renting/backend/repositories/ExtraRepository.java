@@ -11,6 +11,4 @@ import java.util.List;
 @Repository
 public interface ExtraRepository extends JpaRepository<Extra, Long> {
 
-
-    List<Customer> findByIsActive(Integer isActive);
 }

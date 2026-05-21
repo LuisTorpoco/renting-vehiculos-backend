@@ -6,7 +6,7 @@ import com.renting.backend.enums.EmploymentStatus;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InformaRule implements Rule {
+public class InformaRule implements ApprovalRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {

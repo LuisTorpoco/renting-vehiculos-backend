@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/vehicles")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 public class VehicleController {
 
     private final PriceService priceService;
@@ -26,6 +26,28 @@ public class VehicleController {
 
         List<Vehicle> vehicles = vehicleRepository.findByAvailable(1);
         return ResponseEntity.ok(vehicles);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Vehicle>
+    getVehicleById(
+            @PathVariable
+            Long id
+    ) {
+
+        Vehicle vehicle =
+                vehicleRepository
+                        .findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Vehicle not found with id: "
+                                                + id
+                                )
+                        );
+
+        return ResponseEntity.ok(
+                vehicle
+        );
     }
 
     @PostMapping("/calculate-price")

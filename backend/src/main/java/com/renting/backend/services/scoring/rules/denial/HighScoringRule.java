@@ -7,19 +7,17 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 @Component
-public class HighScoringRule implements Rule {
+public class HighScoringRule implements DenialRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
-
         return context.getCustomer()
                 .getScoring()
-                .compareTo(BigDecimal.valueOf(6)) < 0;
+                .compareTo(BigDecimal.valueOf(6)) > 0;
     }
 
     @Override
     public String getMessage() {
-
-        return "El scoring del cliente debe ser inferior a 6";
+        return "Solicitud denegada: El scoring del cliente no debe ser mayor a 6.";
     }
 }

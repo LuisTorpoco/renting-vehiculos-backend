@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @Component
-public class FraudRiskRule implements Rule {
+public class FraudRiskRule implements DenialRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {

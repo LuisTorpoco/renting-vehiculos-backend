@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 @Component
-public class DebtLowerThanFeeRule implements Rule {
+public class DebtLowerThanFeeRule implements ApprovalRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
