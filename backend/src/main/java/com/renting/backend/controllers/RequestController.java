@@ -23,25 +23,29 @@ public class RequestController {
     public ResponseEntity<RequestResponseDTO> createRequest(
             @RequestBody @Valid CreateRequestDTO dto
     ) {
-        RequestResponseDTO response = requestService.createRequest(dto);
+
+        RequestResponseDTO response =
+                requestService.createRequest(dto);
+
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRequest(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRequest(
+            @PathVariable Long id
+    ) {
+
         requestService.logicalDelete(id);
+
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/pending")
     public ResponseEntity<List<RequestResponseDTO>> getPendingRequests() {
-        List<RequestResponseDTO> response = requestService.getPendingRequests();
-        return ResponseEntity.ok(response);
-    }
 
-    @GetMapping
-    public ResponseEntity<List<RequestResponseDTO>> getAllRequests() {
-        List<RequestResponseDTO> response = requestService.getAllRequests();
+        List<RequestResponseDTO> response =
+                requestService.getPendingRequests();
+
         return ResponseEntity.ok(response);
     }
 
@@ -50,7 +54,10 @@ public class RequestController {
             @PathVariable Long id,
             @RequestBody @Valid ResolveRequestDTO dto
     ) {
-        RequestResponseDTO response = requestService.resolveRequest(id, dto);
+
+        RequestResponseDTO response =
+                requestService.resolveRequest(id, dto);
+
         return ResponseEntity.ok(response);
     }
     @GetMapping
