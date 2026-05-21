@@ -15,7 +15,7 @@ public class FraudRiskRule implements DenialRule {
         if (birthDate == null) return false;
 
         int age = Period.between(birthDate, LocalDate.now()).getYears();
-        return age >= 18;
+        return age < 18;
     }
 
     @Override
