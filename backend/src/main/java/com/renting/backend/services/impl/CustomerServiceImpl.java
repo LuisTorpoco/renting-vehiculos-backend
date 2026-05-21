@@ -5,6 +5,7 @@ import com.renting.backend.dtos.response.CustomerResponse;
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Income;
 import com.renting.backend.enums.RequestStatus;
+import com.renting.backend.exception.BusinessException;
 import com.renting.backend.exception.ConflictException;
 import com.renting.backend.exception.ResourceNotFoundException;
 import com.renting.backend.mapper.CustomerMapper;
@@ -93,7 +94,13 @@ public class CustomerServiceImpl implements CustomerService {
     public void addIncome(Long customerId, IncomeRequest request) {
 
         Customer customer = repository.findActiveById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer not found or inactive with id: " + customerId
+                ));
+
+        if (customer.getIsActive() == null || customer.getIsActive() != 1) {
+            throw new BusinessException("Cannot add income to inactive customer");
+        }
 
         Income income = new Income();
 
