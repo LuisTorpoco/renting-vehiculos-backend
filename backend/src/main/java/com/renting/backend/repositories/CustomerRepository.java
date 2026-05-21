@@ -1,6 +1,7 @@
 package com.renting.backend.repositories;
 
 import com.renting.backend.entities.Customer;
+import com.renting.backend.enums.RequestStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -33,7 +34,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 """)
     boolean hasPendingRequests(
             @Param("id") Long id,
-            @Param("status") String status
+            @Param("status") RequestStatus status
     );
 
 

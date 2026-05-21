@@ -18,8 +18,8 @@ public class CustomerController {
     private final CustomerService service;
 
     @PostMapping
-    public ResponseEntity<CustomerResponse> create(
-            @Valid @RequestBody CustomerCreateRequest request
+    public ResponseEntity<CustomerResponse> createCustomer(
+            @Valid @RequestBody CustomerRequest request
     ) {
 
         return ResponseEntity
@@ -28,11 +28,11 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> get(
+    public ResponseEntity<CustomerResponse> getCustomer(
             @PathVariable Long id
     ) {
 
-        return ResponseEntity.ok(service.findById(id));
+        return ResponseEntity.ok(service.findActiveCustomerById(id));
     }
 
     @GetMapping
@@ -40,13 +40,13 @@ public class CustomerController {
             Pageable pageable
     ) {
 
-        return ResponseEntity.ok(service.list(pageable));
+        return ResponseEntity.ok(service.listActiveCustomers(pageable));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerResponse> update(
             @PathVariable Long id,
-            @RequestBody CustomerUpdateRequest request
+            @RequestBody CustomerRequest request
     ) {
 
         return ResponseEntity.ok(service.update(id, request));

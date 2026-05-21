@@ -1,6 +1,6 @@
 package com.renting.backend.mapper;
 
-import com.renting.backend.dtos.request.CustomerCreateRequest;
+import com.renting.backend.dtos.request.CustomerRequest;
 import com.renting.backend.dtos.response.CustomerResponse;
 import com.renting.backend.entities.Customer;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomerMapper {
 
-    public Customer toEntity(CustomerCreateRequest r) {
+    public Customer toEntity(CustomerRequest r) {
 
         return Customer.builder()
                 .nif(r.getNif())
@@ -20,7 +20,7 @@ public class CustomerMapper {
                 .scoring(r.getScoring())
                 .employmentStatus(r.getEmploymentStatus())
                 .phone(r.getPhone())
-                .nonPayment(r.getNonPayment() != null ? r.getNonPayment() : 0) // default 0 si es null
+                .nonPayment(r.getNonPayment() != null ? r.getNonPayment() : 0)
                 .careerTime(r.getCareerTime())
                 .isActive(1)
                 .build();
@@ -41,6 +41,7 @@ public class CustomerMapper {
                 .employmentStatus(c.getEmploymentStatus())
                 .phone(c.getPhone())
                 .nonPayment(c.getNonPayment())
+                .isActive(c.getIsActive() == 1)
                 .careerTime(c.getCareerTime())
                 .build();
     }
