@@ -9,7 +9,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 //DTO para calcular precio total de un alquiler
 public class PriceCalculationRequest {
     private Long vehicleId;

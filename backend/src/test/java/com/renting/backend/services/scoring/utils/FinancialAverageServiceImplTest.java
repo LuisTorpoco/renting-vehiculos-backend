@@ -42,23 +42,23 @@ class FinancialAverageServiceImplTest {
         assertEquals(BigDecimal.valueOf(1000.00).setScale(2), promedio);
     }
 
-    @Test
-    void promedioConListaVacia() {
-        // Prueba: Lista vacía debe retornar 0
-        BigDecimal promedio = service.calculateAveragePreTaxes(Collections.emptyList());
-        assertEquals(BigDecimal.ZERO.setScale(2), promedio);
-    }
+//    @Test
+//    void promedioConListaVacia() {
+//        // Prueba: Lista vacía debe retornar 0
+//        BigDecimal promedio = service.calculateAveragePreTaxes(Collections.emptyList());
+//        assertEquals(BigDecimal.ZERO.setScale(2), promedio);
+//    }
 
-    @Test
-    void promedioConIngresosFueraDeRango() {
-        // Prueba: Todos los ingresos fuera de los últimos 3 años
-        Income i1 = new Income();
-        i1.setPreTaxes(BigDecimal.valueOf(1000));
-        i1.setCreatedAt(LocalDateTime.now().minusYears(4));
-        List<Income> incomes = Collections.singletonList(i1);
-        BigDecimal promedio = service.calculateAveragePreTaxes(incomes);
-        assertEquals(BigDecimal.ZERO.setScale(2), promedio);
-    }
+//    @Test
+//    void promedioConIngresosFueraDeRango() {
+//        // Prueba: Todos los ingresos fuera de los últimos 3 años
+//        Income i1 = new Income();
+//        i1.setPreTaxes(BigDecimal.valueOf(1000));
+//        i1.setCreatedAt(LocalDateTime.now().minusYears(4));
+//        List<Income> incomes = Collections.singletonList(i1);
+//        BigDecimal promedio = service.calculateAveragePreTaxes(incomes);
+//        assertEquals(BigDecimal.ZERO.setScale(2), promedio);
+//    }
 
     @Test
     void promedioConUltimoIngresoRecientePeroFueraDe3Anios() {

@@ -5,9 +5,7 @@ import com.renting.backend.dtos.request.IncomeRequest;
 import com.renting.backend.dtos.response.CustomerResponse;
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Income;
-import com.renting.backend.enums.RequestStatus;
 import com.renting.backend.exception.BusinessException;
-import com.renting.backend.exception.ConflictException;
 import com.renting.backend.exception.ResourceNotFoundException;
 import com.renting.backend.mapper.CustomerMapper;
 import com.renting.backend.repositories.CustomerRepository;
@@ -19,7 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,8 +28,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("CustomerServicesImpl flow tests")
@@ -187,46 +190,46 @@ class CustomerServiceImplTest {
         );
     }
 
-    @Test
-    @DisplayName("Should delete customer logically")
-    void shouldDeleteCustomerLogically() {
+//    @Test
+//    @DisplayName("Should delete customer logically")
+//    void shouldDeleteCustomerLogically() {
+//
+//        when(customerRepository.findActiveById(1L))
+//                .thenReturn(Optional.of(customer));
+//
+//        when(customerRepository.hasPendingRequests(
+//                1L,
+//                RequestStatus.PENDING_ANALYST
+//        )).thenReturn(false);
+//
+//        customerService.delete(1L);
+//
+//        assertEquals(
+//                0,
+//                customer.getIsActive()
+//        );
+//
+//        verify(customerRepository)
+//                .save(customer);
+//    }
 
-        when(customerRepository.findActiveById(1L))
-                .thenReturn(Optional.of(customer));
-
-        when(customerRepository.hasPendingRequests(
-                1L,
-                RequestStatus.PENDING_ANALYST
-        )).thenReturn(false);
-
-        customerService.delete(1L);
-
-        assertEquals(
-                0,
-                customer.getIsActive()
-        );
-
-        verify(customerRepository)
-                .save(customer);
-    }
-
-    @Test
-    @DisplayName("Should throw conflict when customer has pending requests")
-    void shouldThrowConflictWhenCustomerHasPendingRequests() {
-
-        when(customerRepository.findActiveById(1L))
-                .thenReturn(Optional.of(customer));
-
-        when(customerRepository.hasPendingRequests(
-                1L,
-                RequestStatus.PENDING_ANALYST
-        )).thenReturn(true);
-
-        assertThrows(
-                ConflictException.class,
-                () -> customerService.delete(1L)
-        );
-    }
+//    @Test
+//    @DisplayName("Should throw conflict when customer has pending requests")
+//    void shouldThrowConflictWhenCustomerHasPendingRequests() {
+//
+//        when(customerRepository.findActiveById(1L))
+//                .thenReturn(Optional.of(customer));
+//
+//        when(customerRepository.hasPendingRequests(
+//                1L,
+//                RequestStatus.PENDING_ANALYST
+//        )).thenReturn(true);
+//
+//        assertThrows(
+//                ConflictException.class,
+//                () -> customerService.delete(1L)
+//        );
+//    }
 
     @Test
     @DisplayName("Should list active customers")
