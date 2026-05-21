@@ -3,7 +3,9 @@ package com.renting.backend.controllers;
 import com.renting.backend.dtos.request.CreateRequestDTO;
 import com.renting.backend.dtos.request.ResolveRequestDTO;
 import com.renting.backend.dtos.response.RequestResponseDTO;
+import com.renting.backend.dtos.response.RequestWithDetailsResponseDTO;
 import com.renting.backend.services.RequestService;
+import com.renting.backend.services.RequestDetailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,12 @@ import java.util.List;
 public class RequestController {
 
     private final RequestService requestService;
+    private final RequestDetailService requestDetailService;
 
     @PostMapping
     public ResponseEntity<RequestResponseDTO> createRequest(
             @RequestBody @Valid CreateRequestDTO dto
     ) {
-
         RequestResponseDTO response =
                 requestService.createRequest(dto);
 
@@ -34,7 +36,6 @@ public class RequestController {
     public ResponseEntity<Void> deleteRequest(
             @PathVariable Long id
     ) {
-
         requestService.logicalDelete(id);
 
         return ResponseEntity.noContent().build();
@@ -42,10 +43,25 @@ public class RequestController {
 
     @GetMapping("/pending")
     public ResponseEntity<List<RequestResponseDTO>> getPendingRequests() {
-
         List<RequestResponseDTO> response =
                 requestService.getPendingRequests();
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/details")
+    public ResponseEntity<RequestWithDetailsResponseDTO> getRequestWithDetails(
+            @PathVariable Long id
+    ) {
+        RequestWithDetailsResponseDTO response =
+                requestDetailService.getRequestWithDetails(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RequestResponseDTO>> getAllRequests() {
+        List<RequestResponseDTO> response = requestService.getAllRequests();
         return ResponseEntity.ok(response);
     }
 
@@ -54,15 +70,9 @@ public class RequestController {
             @PathVariable Long id,
             @RequestBody @Valid ResolveRequestDTO dto
     ) {
-
         RequestResponseDTO response =
                 requestService.resolveRequest(id, dto);
 
-        return ResponseEntity.ok(response);
-    }
-    @GetMapping
-    public ResponseEntity<List<RequestResponseDTO>> getAllRequests() {
-        List<RequestResponseDTO> response = requestService.getAllRequests();
         return ResponseEntity.ok(response);
     }
 }
