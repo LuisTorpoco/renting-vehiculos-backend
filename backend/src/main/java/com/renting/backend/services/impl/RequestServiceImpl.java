@@ -22,20 +22,14 @@ import java.util.List;
 public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository requestRepository;
-
     private final RequestBusinessService businessService;
-
     private final RequestValidator validator;
-
     private final RequestMapper mapper;
 
     @Override
-    public RequestResponseDTO createRequest(
-            CreateRequestDTO dto
-    ) {
-
+    public RequestResponseDTO createRequest(CreateRequestDTO dto) {
+        // businessService ya llama al scoring y guarda el estado final
         Request request = businessService.create(dto);
-
         return mapper.toDTO(request);
     }
 
@@ -45,15 +39,12 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestRepository
                 .findByIdAndIsActive(requestId, 1)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Request not found"
-                        )
+                        new ResourceNotFoundException("Request not found")
                 );
 
         validator.validateDeletion(request);
 
         request.setIsActive(0);
-
         requestRepository.save(request);
     }
 
@@ -61,38 +52,44 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestResponseDTO> getPendingRequests() {
 
         return requestRepository
-                .findByStateAndIsActive(
-                        RequestStatus.PENDING_ANALYST,
-                        1
-                )
+                .findByStateAndIsActive(RequestStatus.PENDING_ANALYST, 1)
                 .stream()
                 .map(mapper::toDTO)
                 .toList();
     }
 
     @Override
-    public RequestResponseDTO resolveRequest(
-            Long requestId,
-            ResolveRequestDTO dto
-    ) {
+    public List<RequestResponseDTO> getAllRequests() {
+
+        return requestRepository
+                .findAll()
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public RequestResponseDTO resolveRequest(Long requestId, ResolveRequestDTO dto) {
 
         Request request = requestRepository
                 .findByIdAndIsActive(requestId, 1)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Request not found"
-                        )
+                        new ResourceNotFoundException("Request not found")
                 );
 
         validator.validateAnalystResolution(request);
 
         request.setState(dto.getStatus());
-
         request.setResolutionDate(LocalDateTime.now());
 
-        Request updatedRequest =
-                requestRepository.save(request);
+        // Si se resuelve manualmente también se cierra
+        if (dto.getStatus() == RequestStatus.APPROVED
+                || dto.getStatus() == RequestStatus.DENIED
+                || dto.getStatus() == RequestStatus.APPROVED_WITH_WARRANTIES) {
+            request.setIsActive(0);
+        }
 
+        Request updatedRequest = requestRepository.save(request);
         return mapper.toDTO(updatedRequest);
     }
 }
