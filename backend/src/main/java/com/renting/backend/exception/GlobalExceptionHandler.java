@@ -1,5 +1,6 @@
 package com.renting.backend.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,10 +50,28 @@ public class GlobalExceptionHandler {
                 .body("Validation error: " + message);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolation(
+            DataIntegrityViolationException ex
+    ) {
+        String message = ex.getMessage();
+
+        if (message != null && message.toLowerCase().contains("nif")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("NIF already exists in the system");
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Data integrity violation: duplicate or invalid data");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneric(
             Exception ex
     ) {
+        ex.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Internal server error");
