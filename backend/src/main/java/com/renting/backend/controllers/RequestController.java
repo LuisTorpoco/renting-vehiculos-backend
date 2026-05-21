@@ -60,4 +60,9 @@ public class RequestController {
 
         return ResponseEntity.ok(response);
     }
+    @GetMapping
+    public ResponseEntity<List<RequestResponseDTO>> getAllRequests() {
+        List<RequestResponseDTO> response = requestService.getAllRequests();
+        return ResponseEntity.ok(response);
+    }
 }
