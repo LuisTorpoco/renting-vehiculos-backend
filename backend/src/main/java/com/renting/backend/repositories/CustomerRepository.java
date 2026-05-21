@@ -29,9 +29,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     SELECT COUNT(r) > 0
     FROM Request r
     WHERE r.customer.id = :id
-    AND r.state = 'PENDING_ANALYST'
+    AND r.state = :status
 """)
-    boolean hasPendingRequests(@Param("id") Long id);
+    boolean hasPendingRequests(
+            @Param("id") Long id,
+            @Param("status") String status
+    );
+
 
     long countByIsActive(Integer isActive);
 }

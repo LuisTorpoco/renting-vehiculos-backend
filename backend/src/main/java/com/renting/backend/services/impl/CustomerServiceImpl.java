@@ -4,7 +4,10 @@ import com.renting.backend.dtos.request.*;
 import com.renting.backend.dtos.response.CustomerResponse;
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Income;
+import com.renting.backend.enums.RequestStatus;
 import com.renting.backend.exception.BusinessException;
+import com.renting.backend.exception.ConflictException;
+import com.renting.backend.exception.ResourceNotFoundException;
 import com.renting.backend.mapper.CustomerMapper;
 import com.renting.backend.repositories.CustomerRepository;
 import com.renting.backend.repositories.IncomeRepository;
@@ -58,16 +61,18 @@ public class CustomerServiceImpl implements CustomerService {
     public void delete(Long id) {
 
         Customer c = repository.findActiveById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
-        if (repository.hasPendingRequests(id)) {
-            throw new BusinessException("Customer has active requests");
+        if (repository.hasPendingRequests(id, RequestStatus.PENDING_ANALYST.name())) {
+            throw new ConflictException(
+                    "No se puede borrar el cliente: tiene solicitudes pendientes."
+            );
         }
 
         c.setIsActive(0);
-
         repository.save(c);
     }
+
 
     @Override
     public CustomerResponse findById(Long id) {
