@@ -14,7 +14,7 @@ public class DebtGreaterThanFeeRule implements DenialRule {
 
         // Usamos postTaxes del primer ingreso y la cuota directa que ya viene calculada en el contexto
         BigDecimal netIncome = context.getIncomes().get(0).getPostTaxes();
-        BigDecimal currentFee = context.getMonthlyFee(); // ¡Directo del contexto!
+        BigDecimal currentFee = context.getMonthlyFee(); 
 
         BigDecimal maxAllowedDebt = netIncome.multiply(BigDecimal.valueOf(0.40));
 
