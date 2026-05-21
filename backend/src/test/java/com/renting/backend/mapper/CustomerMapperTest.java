@@ -2,7 +2,7 @@ package com.renting.backend.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.renting.backend.dtos.request.CustomerCreateRequest;
+import com.renting.backend.dtos.request.CustomerRequest;
 import com.renting.backend.entities.Customer;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ class CustomerMapperTest {
     @Test
     void toEntity_DeberiaMapearRequestAEntidadCorrectamente() {
 
-        CustomerCreateRequest request = new CustomerCreateRequest();
+        CustomerRequest request = new CustomerRequest();
         request.setNif("12345678Z");
         request.setName("Abraham");
         request.setFirstSurname("García");

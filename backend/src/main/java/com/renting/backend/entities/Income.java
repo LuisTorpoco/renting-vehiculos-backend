@@ -1,6 +1,7 @@
 package com.renting.backend.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,10 +21,12 @@ public class Income {
 
     @Column(name =
             "pre_taxes")
+    @NotNull
     private BigDecimal preTaxes;
 
     @Column(name =
             "post_taxes")
+    @NotNull
     private BigDecimal postTaxes;
 
     @Column(name =

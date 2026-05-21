@@ -7,15 +7,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface CustomerService {
 
-    CustomerResponse create(CustomerCreateRequest request);
+    CustomerResponse create(CustomerRequest request);
 
-    CustomerResponse update(Long id, CustomerUpdateRequest request);
+    CustomerResponse update(Long id, CustomerRequest request);
 
     void delete(Long id);
 
-    CustomerResponse findById(Long id);
+    CustomerResponse findActiveCustomerById(Long id);
 
-    Page<CustomerResponse> list(Pageable pageable);
+    Page<CustomerResponse> listActiveCustomers(Pageable pageable);
 
     void addIncome(Long customerId, IncomeRequest request);
 }
