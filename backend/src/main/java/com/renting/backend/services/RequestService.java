@@ -15,7 +15,5 @@ public interface RequestService {
     List<RequestResponseDTO> getPendingRequests();
     List<RequestResponseDTO> getAllRequests();
 
-    List<RequestResponseDTO> getAllRequests();
-
     RequestResponseDTO resolveRequest(Long requestId, ResolveRequestDTO dto);
 }

@@ -2,11 +2,7 @@ package com.renting.backend.services.business;
 
 import com.renting.backend.dtos.request.CreateRequestDTO;
 import com.renting.backend.dtos.request.RequestVehicleDTO;
-<<<<<<< HEAD
-import com.renting.backend.dtos.response.ScoringResponse;
-=======
 import com.renting.backend.dtos.response.RuleEvaluationResponse;
->>>>>>> develop
 import com.renting.backend.entities.Customer;
 import com.renting.backend.entities.Request;
 import com.renting.backend.entities.RequestDetail;
@@ -15,13 +11,9 @@ import com.renting.backend.exception.ResourceNotFoundException;
 import com.renting.backend.repositories.CustomerRepository;
 import com.renting.backend.repositories.RequestDetailRepository;
 import com.renting.backend.repositories.RequestRepository;
-<<<<<<< HEAD
-import com.renting.backend.services.ScoringService;
-=======
 import com.renting.backend.services.scoring.context.ScoringContext;
 import com.renting.backend.services.scoring.engine.DenialRulesEngine;
 import com.renting.backend.services.scoring.engine.ApprovalRulesEngine;
->>>>>>> develop
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +28,6 @@ public class RequestBusinessService {
     private final RequestRepository requestRepository;
     private final RequestDetailRepository detailRepository;
     private final CustomerRepository customerRepository;
-    private final ScoringService scoringService;
 
     private final DenialRulesEngine denialRulesEngine;
     private final ApprovalRulesEngine approvalRulesEngine;
@@ -44,17 +35,6 @@ public class RequestBusinessService {
     @Transactional
     public Request create(CreateRequestDTO dto) {
 
-<<<<<<< HEAD
-        Customer customer =
-                customerRepository
-                        .findById(dto.getCustomerId())
-                        .orElseThrow(() ->
-                                new ResourceNotFoundException(
-                                        "Customer not found with id: "
-                                                + dto.getCustomerId()
-                                )
-                        );
-=======
 
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -90,9 +70,7 @@ public class RequestBusinessService {
 
         LocalDateTime now = LocalDateTime.now();
 
->>>>>>> develop
 
-        // 1. Guardar solicitud con estado inicial PENDING_ANALYST
         Request request = Request.builder()
                 .customer(customer)
                 .createdAt(now)
@@ -104,38 +82,13 @@ public class RequestBusinessService {
 
         Request savedRequest = requestRepository.save(request);
 
-<<<<<<< HEAD
-        // 2. Guardar detalles de vehículos y extras
-=======
 
->>>>>>> develop
         saveRequestDetails(savedRequest, dto);
 
-        // 3. Llamar al scoring con el cliente y la solicitud guardada
-        ScoringResponse scoring = scoringService.evaluate(customer, savedRequest);
-
-        // 4. Aplicar resultado del scoring
-        if (Boolean.TRUE.equals(scoring.getAutomaticallyDenied())) {
-            savedRequest.setState(RequestStatus.DENIED);
-            savedRequest.setResolutionDate(LocalDateTime.now());
-            savedRequest.setIsActive(0);
-
-        } else if (Boolean.TRUE.equals(scoring.getAutomaticallyApproved())) {
-            savedRequest.setState(RequestStatus.APPROVED);
-            savedRequest.setResolutionDate(LocalDateTime.now());
-            savedRequest.setIsActive(0);
-        }
-        // Si ninguno → queda PENDING_ANALYST con isActive=1
-
-        // 5. Guardar con estado final
-        return requestRepository.save(savedRequest);
+        return savedRequest;
     }
 
     private void saveRequestDetails(Request request, CreateRequestDTO dto) {
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
         for (RequestVehicleDTO vehicle : dto.getVehicles()) {
 
             List<Long> extraIds = vehicle.getExtraIds();
