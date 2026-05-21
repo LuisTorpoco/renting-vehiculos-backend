@@ -37,4 +37,6 @@ public interface RequestRepository
         AND r.isActive = 1
     """)
     Optional<Request> findByIdActive(@Param("id") Long id);
+
+    List<Request> findByIsActive(Integer isActive);
 }

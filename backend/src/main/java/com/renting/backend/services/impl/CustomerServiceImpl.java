@@ -66,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         log.info(RequestStatus.PENDING_ANALYST.toString());
 
-        if (repository.hasPendingRequests(id, RequestStatus.PENDING_ANALYST)) {
+        if (repository.hasAnyRequest(id)) {
             throw new ConflictException(
                     "No se puede borrar el cliente: tiene solicitudes pendientes."
             );

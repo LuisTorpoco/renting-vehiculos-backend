@@ -43,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
     public void logicalDelete(Long requestId) {
 
         Request request = requestRepository
-                .findByIdAndIsActive(requestId, 1)
+                .findByIdActive(requestId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Request not found"
@@ -77,7 +77,7 @@ public class RequestServiceImpl implements RequestService {
     ) {
 
         Request request = requestRepository
-                .findByIdAndIsActive(requestId, 1)
+                .findByIdActive(requestId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Request not found"
@@ -97,7 +97,7 @@ public class RequestServiceImpl implements RequestService {
     }
     @Override
     public List<RequestResponseDTO> getAllRequests() {
-        return requestRepository.findAll()
+        return requestRepository.findByIsActive(1)
                 .stream()
                 .map(mapper::toDTO)
                 .toList();

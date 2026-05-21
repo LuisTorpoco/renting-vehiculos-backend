@@ -37,6 +37,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             @Param("status") RequestStatus status
     );
 
+    @Query("""
+    SELECT COUNT(r) > 0
+    FROM Request r
+    WHERE r.customer.id = :id
+""")
+    boolean hasAnyRequest(@Param("id") Long id);
 
     long countByIsActive(Integer isActive);
 }
