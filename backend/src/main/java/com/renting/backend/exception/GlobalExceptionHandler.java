@@ -2,6 +2,7 @@ package com.renting.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -12,9 +13,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNotFound(
             ResourceNotFoundException ex
     ) {
-
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<String> handleConflict(
+            ConflictException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE) // 406
                 .body(ex.getMessage());
     }
 
@@ -22,17 +31,28 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBusiness(
             BusinessException ex
     ) {
-
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidation(
+            MethodArgumentNotValidException ex
+    ) {
+        String message = ex.getBindingResult()
+                .getFieldError()
+                .getDefaultMessage();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Validation error: " + message);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneric(
             Exception ex
     ) {
-
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Internal server error");

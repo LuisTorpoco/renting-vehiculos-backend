@@ -13,6 +13,7 @@ public interface RequestService {
     void logicalDelete(Long requestId);
 
     List<RequestResponseDTO> getPendingRequests();
+    List<RequestResponseDTO> getAllRequests();
 
     List<RequestResponseDTO> getAllRequests();
 

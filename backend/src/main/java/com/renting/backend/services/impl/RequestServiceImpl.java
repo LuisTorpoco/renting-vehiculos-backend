@@ -92,4 +92,12 @@ public class RequestServiceImpl implements RequestService {
         Request updatedRequest = requestRepository.save(request);
         return mapper.toDTO(updatedRequest);
     }
+    @Override
+    public List<RequestResponseDTO> getAllRequests() {
+        return requestRepository.findAll()
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
+    }
+
 }

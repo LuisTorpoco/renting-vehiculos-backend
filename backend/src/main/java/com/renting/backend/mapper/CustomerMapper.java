@@ -20,11 +20,12 @@ public class CustomerMapper {
                 .scoring(r.getScoring())
                 .employmentStatus(r.getEmploymentStatus())
                 .phone(r.getPhone())
-                .nonPayment(r.getNonPayment())
+                .nonPayment(r.getNonPayment() != null ? r.getNonPayment() : 0) // default 0 si es null
                 .careerTime(r.getCareerTime())
                 .isActive(1)
                 .build();
     }
+
 
     public CustomerResponse toResponse(Customer c) {
 

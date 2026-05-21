@@ -56,11 +56,11 @@ public class CustomerController {
     public ResponseEntity<Void> delete(
             @PathVariable Long id
     ) {
-
         service.delete(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build(); // devuelve 200 OK
     }
+
 
     @PostMapping("/{id}/incomes")
     public ResponseEntity<Void> addIncome(
@@ -72,4 +72,5 @@ public class CustomerController {
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
 }
