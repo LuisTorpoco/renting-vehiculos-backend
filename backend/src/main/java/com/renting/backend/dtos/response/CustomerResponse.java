@@ -21,5 +21,6 @@ public class CustomerResponse {
     private String employmentStatus;
     private String phone;
     private Integer nonPayment;
+    private boolean isActive;
     private LocalDate careerTime;
 }

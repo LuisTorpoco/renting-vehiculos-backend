@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-public class CustomerCreateRequest {
+public class CustomerRequest {
 
     @NotBlank
     private String nif;
@@ -24,6 +24,7 @@ public class CustomerCreateRequest {
     private String nationality;
 
     @NotNull
+    @Past(message = "Birthday must be in the past")
     private LocalDate birthdate;
 
     @NotNull
