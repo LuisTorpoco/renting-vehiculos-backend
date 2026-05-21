@@ -95,10 +95,15 @@ public class CustomerServiceImpl implements CustomerService {
     public void addIncome(Long customerId, IncomeRequest request) {
 
         Customer customer = repository.findActiveById(customerId)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer not found or inactive with id: " + customerId
+                ));
+
+        if (customer.getIsActive() == null || customer.getIsActive() != 1) {
+            throw new BusinessException("Cannot add income to inactive customer");
+        }
 
         Income income = new Income();
-
         income.setCustomer(customer);
         income.setPreTaxes(request.getPreTaxes());
         income.setPostTaxes(request.getPostTaxes());
@@ -106,4 +111,5 @@ public class CustomerServiceImpl implements CustomerService {
 
         incomeRepository.save(income);
     }
+
 }
