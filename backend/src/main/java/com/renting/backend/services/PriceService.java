@@ -23,18 +23,18 @@ public class PriceService {
     private final ExtraRepository extraRepository;
 
     public PriceCalculationResponse calculatePrice(PriceCalculationRequest request) {
-        //Buscar el vehículo en la base de datos
+
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado con ID: " + request.getVehicleId()));
 
-        // Valores base extraídos de las tablas de Oracle
-        BigDecimal carPrice = vehicle.getPrice();                // Ej: 15000
-        BigDecimal baseMonthlyFee = vehicle.getBaseMonthlyFee(); // Ej: 250
+        
+        BigDecimal carPrice = vehicle.getPrice();
+        BigDecimal baseMonthlyFee = vehicle.getBaseMonthlyFee();
 
         BigDecimal extraFixedIncrement = BigDecimal.ZERO;
         BigDecimal extraPercentageIncrement = BigDecimal.ZERO;
 
-        // Procesar Extras evitando duplicados (Mantenemos la limpieza de la Tarea 5)
+
         if (request.getExtraIds() != null && !request.getExtraIds().isEmpty()) {
             Set<Long> uniqueExtraIds = new HashSet<>(request.getExtraIds());
             List<Extra> extras = extraRepository.findAllById(uniqueExtraIds);
@@ -43,6 +43,7 @@ public class PriceService {
             for (Extra extra : extras) {
                 if (extra.getPrice() != null && (extra.getPercentage() == null || extra.getPercentage().compareTo(BigDecimal.ZERO) == 0)) {
                     extraFixedIncrement = extraFixedIncrement.add(extra.getPrice());
+                    // Los extras fijos aumentan la inversión total anualizada
                     carPrice = carPrice.add(extra.getPrice().multiply(BigDecimal.valueOf(12)));
                 }
             }
@@ -60,26 +61,29 @@ public class PriceService {
             }
         }
 
-        //Sumamos los extras correspondientes a la cuota base
-        baseMonthlyFee = baseMonthlyFee.add(extraFixedIncrement).add(extraPercentageIncrement);
+
+        BigDecimal totalBaseMonthlyFee = baseMonthlyFee.add(extraFixedIncrement).add(extraPercentageIncrement);
 
 
         Integer monthsObj = request.getMonths();
         int months = (monthsObj == null || monthsObj <= 0) ? 12 : monthsObj;
 
-        BigDecimal difference = carPrice.subtract(baseMonthlyFee);
+
+        BigDecimal termAdjustment = BigDecimal.ZERO;
+        if (months < 36) {
+
+            termAdjustment = totalBaseMonthlyFee.multiply(BigDecimal.valueOf(0.05));
+        }
 
 
-        BigDecimal termAdjustment = difference.divide(BigDecimal.valueOf(months), 4, RoundingMode.HALF_UP);
-
-        BigDecimal finalMonthlyFee = baseMonthlyFee.add(termAdjustment);
+        BigDecimal finalMonthlyFee = totalBaseMonthlyFee.add(termAdjustment);
 
         return PriceCalculationResponse.builder()
                 .finalInvestment(carPrice.setScale(2, RoundingMode.HALF_UP))
                 .finalMonthlyFee(finalMonthlyFee.setScale(2, RoundingMode.HALF_UP))
                 .extraFixedIncrement(extraFixedIncrement.setScale(2, RoundingMode.HALF_UP))
                 .extraPercentageIncrement(extraPercentageIncrement.setScale(2, RoundingMode.HALF_UP))
-                .termAdjustment(termAdjustment.setScale(2, RoundingMode.HALF_UP)) // Esto reflejará el coste prorrateado por mes
+                .termAdjustment(termAdjustment.setScale(2, RoundingMode.HALF_UP))
                 .build();
     }
 }
