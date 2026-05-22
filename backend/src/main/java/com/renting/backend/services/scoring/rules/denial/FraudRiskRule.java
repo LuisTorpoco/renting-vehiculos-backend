@@ -1,22 +1,25 @@
 package com.renting.backend.services.scoring.rules.denial;
 
 import com.renting.backend.services.scoring.context.ScoringContext;
+import com.renting.backend.services.scoring.rules.Rule;
 import org.springframework.stereotype.Component;
-import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Component
 public class FraudRiskRule implements DenialRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
-        if (context.getCustomer() == null || context.getCustomer().getScoring() == null) return false;
+        LocalDate birthDate = context.getCustomer().getBirthdate();
+        if (birthDate == null) return false;
 
-
-        return context.getCustomer().getScoring().compareTo(BigDecimal.valueOf(2.0)) < 0;
+        int age = Period.between(birthDate, LocalDate.now()).getYears();
+        return age < 18;
     }
 
     @Override
     public String getMessage() {
-        return "Solicitud denegada: Alerta de riesgo crítico de seguridad. El nivel de scoring del perfil es incompatible con las políticas de riesgo de la empresa.";
+        return "Solicitud denegada: Alerta de riesgo legal. El solicitante es menor de edad.";
     }
 }

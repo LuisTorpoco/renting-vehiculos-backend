@@ -8,16 +8,18 @@ public class SpanishNationalityRule implements ApprovalRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
-        if (context.getCustomer() == null || context.getCustomer().getNationality() == null) return false;
+        String nationality = context.getCustomer().getNationality();
 
-
-        String nationality = context.getCustomer().getNationality().trim();
-
-        return !nationality.equalsIgnoreCase("ES");
+        return nationality != null && (
+                nationality.equalsIgnoreCase("ES")
+                        || nationality.equalsIgnoreCase("ESPAÑA")
+                        || nationality.equalsIgnoreCase("ESPAÑOLA")
+                        || nationality.equalsIgnoreCase("SPAIN")
+        );
     }
 
     @Override
     public String getMessage() {
-        return "Solicitud denegada: El solicitante no cumple con el requisito de nacionalidad o residencia requerido por la política local.";
+        return "El cliente tiene nacionalidad española.";
     }
 }
