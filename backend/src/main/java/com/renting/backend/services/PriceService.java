@@ -27,7 +27,7 @@ public class PriceService {
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado con ID: " + request.getVehicleId()));
 
-        
+
         BigDecimal carPrice = vehicle.getPrice();
         BigDecimal baseMonthlyFee = vehicle.getBaseMonthlyFee();
 

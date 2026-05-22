@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class FraudRiskRuleTest {
 
     private FraudRiskRule rule;
-    private ScoringContext context;
     private Customer customer;
 
     @BeforeEach
@@ -24,34 +23,37 @@ class FraudRiskRuleTest {
     }
 
     @Test
-    @DisplayName("Debe retornar true para edad >= 18")
-    void testEvaluarMayorEdad() {
-        customer.setBirthdate(LocalDate.now().minusYears(30));
-        context = ScoringContext.builder().customer(customer).build();
-        assertTrue(rule.evaluate(context));
+    @DisplayName("Debe retornar true si el scoring es inferior a 2.0 (Riesgo Crítico / Denegar)")
+    void testEvaluarScoringBajoRiesgo() {
+        customer.setScoring(BigDecimal.valueOf(1.5)); // 1.5 < 2.0 -> Dispara la denegación
+        ScoringContext context = ScoringContext.builder().customer(customer).build();
+
+        assertTrue(rule.evaluate(context), "Debería denegar la solicitud por scoring críticamente bajo");
     }
 
     @Test
-    @DisplayName("Debe retornar false para edad < 18")
-    void testEvaluarMenorEdad() {
-        customer.setBirthdate(LocalDate.now().minusYears(17));
-        context = ScoringContext.builder().customer(customer).build();
-        assertFalse(rule.evaluate(context));
+    @DisplayName("Debe retornar false si el scoring es seguro (Igual o mayor a 2.0)")
+    void testEvaluarScoringSeguro() {
+        customer.setScoring(BigDecimal.valueOf(5.0)); // 5.0 >= 2.0 -> Perfil apto, no deniega
+        ScoringContext context = ScoringContext.builder().customer(customer).build();
+
+        assertFalse(rule.evaluate(context), "No debería denegar si el cliente tiene un scoring sano");
     }
 
     @Test
-    @DisplayName("Debe retornar false cuando birthdate es null")
-    void testEvaluarBirthdateNull() {
-        customer.setBirthdate(null);
-        context = ScoringContext.builder().customer(customer).build();
-        assertFalse(rule.evaluate(context));
+    @DisplayName("Debe retornar false cuando el scoring es null")
+    void testEvaluarScoringNull() {
+        customer.setScoring(null);
+        ScoringContext context = ScoringContext.builder().customer(customer).build();
+
+        assertFalse(rule.evaluate(context), "Debería ignorar la regla si no hay datos de scoring disponibles");
     }
 
     @Test
-    @DisplayName("Debe retornar mensaje de fraude")
+    @DisplayName("Debe retornar el mensaje de alerta de riesgo crítico")
     void testObtenerMensaje() {
         String msg = rule.getMessage();
         assertNotNull(msg);
-        assertFalse(msg.isEmpty());
+        assertTrue(msg.contains("riesgo crítico de seguridad"), "El mensaje debe alertar sobre las políticas de riesgo");
     }
 }
