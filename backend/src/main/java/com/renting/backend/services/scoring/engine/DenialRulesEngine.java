@@ -13,48 +13,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DenialRulesEngine {
 
-    private final List<DenialRule>
-            denialRules;
+    private final List<DenialRule> denialRules;
 
-    public List<RuleEvaluationResponse>
-    evaluate(
-            ScoringContext context
-    ) {
+    public List<RuleEvaluationResponse> evaluate(ScoringContext context) {
+        List<RuleEvaluationResponse> evaluations = new ArrayList<>();
 
-        List<RuleEvaluationResponse>
-                evaluations =
-                new ArrayList<>();
+        for (DenialRule rule : denialRules) {
 
-        for (DenialRule rule
-                : denialRules) {
+            boolean isDenied = rule.evaluate(context);
 
-            boolean passed =
-                    rule.evaluate(
-                            context
-                    );
 
-            RuleEvaluationResponse
-                    evaluation =
-                    RuleEvaluationResponse
-                            .builder()
-                            .ruleName(
-                                    rule.getClass()
-                                            .getSimpleName()
-                            )
-                            .passed(
-                                    passed
-                            )
-                            .message(
-                                    rule.getMessage()
-                            )
-                            .build();
+            boolean passed = !isDenied;
 
-            evaluations.add(
-                    evaluation
-            );
+            RuleEvaluationResponse evaluation = RuleEvaluationResponse.builder()
+                    .ruleName(rule.getClass().getSimpleName())
+                    .passed(passed)
+                    .message(passed ? "Validación superada correctamente." : rule.getMessage())
+                    .build();
 
-            if (passed) {
+            evaluations.add(evaluation);
 
+
+            if (isDenied) {
                 break;
             }
         }
