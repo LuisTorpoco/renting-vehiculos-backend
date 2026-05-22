@@ -1,7 +1,6 @@
 package com.renting.backend.services.scoring.rules.approval;
 
 import com.renting.backend.services.scoring.context.ScoringContext;
-import com.renting.backend.services.scoring.rules.Rule;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,13 +8,16 @@ public class SpanishNationalityRule implements ApprovalRule {
 
     @Override
     public boolean evaluate(ScoringContext context) {
+        if (context.getCustomer() == null || context.getCustomer().getNationality() == null) return false;
 
-        String nationality = context.getCustomer().getNationality();
-        return nationality != null && (nationality.equalsIgnoreCase("ESPAÑOLA") || nationality.equalsIgnoreCase("SPAIN"));
+
+        String nationality = context.getCustomer().getNationality().trim();
+
+        return !nationality.equalsIgnoreCase("ES");
     }
 
     @Override
     public String getMessage() {
-        return "Aviso de aprobación: Requiere verificación de riesgo adicional por nacionalidad extranjera.";
+        return "Solicitud denegada: El solicitante no cumple con el requisito de nacionalidad o residencia requerido por la política local.";
     }
 }
