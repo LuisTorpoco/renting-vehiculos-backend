@@ -64,11 +64,8 @@ public class PriceService {
         baseMonthlyFee = baseMonthlyFee.add(extraFixedIncrement).add(extraPercentageIncrement);
 
 
-        int months = request.getMonths();
-        if (months <= 0) {
-            months = 12;
-        }
-
+        Integer monthsObj = request.getMonths();
+        int months = (monthsObj == null || monthsObj <= 0) ? 12 : monthsObj;
 
         BigDecimal difference = carPrice.subtract(baseMonthlyFee);
 

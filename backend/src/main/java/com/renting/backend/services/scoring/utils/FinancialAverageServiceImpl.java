@@ -48,7 +48,7 @@ public class FinancialAverageServiceImpl
         if (incomes == null
                 || incomes.isEmpty()) {
 
-            return BigDecimal.ZERO;
+            return BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP);
         }
 
         LocalDateTime limitDate =
@@ -100,13 +100,15 @@ public class FinancialAverageServiceImpl
                 .getCreatedAt()
                 .isAfter(twoYearsAgo)) {
 
-            return preTaxes
+            BigDecimal value = preTaxes
                     ? latestIncome
                     .getPreTaxes()
                     : latestIncome
                     .getPostTaxes();
+
+            return value == null ? BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP) : value.setScale(SCALE, RoundingMode.HALF_UP);
         }
 
-        return BigDecimal.ZERO;
+        return BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP);
     }
 }

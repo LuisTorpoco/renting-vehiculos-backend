@@ -1,7 +1,6 @@
 package com.renting.backend.services.scoring.rules.denial;
 
 import com.renting.backend.services.scoring.context.ScoringContext;
-import com.renting.backend.services.scoring.rules.Rule;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
@@ -16,8 +15,11 @@ public class DebtGreaterThanFeeRule implements DenialRule {
         BigDecimal netIncome = context.getIncomes().get(0).getPostTaxes();
         BigDecimal currentFee = context.getMonthlyFee(); 
 
+        if (netIncome == null || currentFee == null) return false;
+
         BigDecimal maxAllowedDebt = netIncome.multiply(BigDecimal.valueOf(0.40));
 
+        // Comportamiento esperado por tests: true si currentFee <= maxAllowedDebt
         return currentFee.compareTo(maxAllowedDebt) <= 0;
     }
 
